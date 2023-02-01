@@ -40,10 +40,10 @@ class HeadView extends Component {
 
         return (
             <div className="head">
-                <h1>XXX Big Data Dashboard</h1>
-                <div className="weather">
+                <h1>智慧用电信息化系统</h1>
+                {/* <div className="weather">
                     <span id="showTime">{y + "-" + mt + "-" + day + "  " + h + ":" + m + ":" + s}</span>
-                </div>
+                </div> */}
             </div>
         );
     }

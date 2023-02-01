@@ -358,6 +358,8 @@ a:hover {
 	position: relative;
 	height: 7.2rem;
 	z-index: 9;
+	padding-left: 1rem;
+	padding-right: 1rem;
 }
 
 .map4 {

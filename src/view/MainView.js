@@ -194,7 +194,6 @@ class MainView extends Component {
           }],
           series: [
             {
-
               type: 'bar',
               data: [1500, 1200, 600, 200, 300, 300, 900],
               barWidth: '35%',
@@ -207,7 +206,6 @@ class MainView extends Component {
                 }
               }
             }
-
           ]
         },
         {
@@ -318,7 +316,6 @@ class MainView extends Component {
             bottom: '10',
             containLabel: true
           },
-
           xAxis: [{
             type: 'category',
             boundaryGap: false,
@@ -343,11 +340,7 @@ class MainView extends Component {
             axisLine: { show: false },
             position: 'bottom',
             offset: 20,
-
-
-
           }],
-
           yAxis: [{
             type: 'value',
             axisTick: { show: false },
@@ -371,16 +364,15 @@ class MainView extends Component {
           }],
           series: [
             {
-              name: 'Category A',
+              name: '空调',
               type: 'line',
               smooth: true,
               symbol: 'circle',
               symbolSize: 5,
               showSymbol: false,
               lineStyle: {
-
                 normal: {
-                  color: '#0184d5',
+                  color: '#ef0425',
                   width: 2
                 }
               },
@@ -404,7 +396,6 @@ class MainView extends Component {
                 }
               },
               data: [3, 4, 3, 4, 3, 4, 3, 6, 2, 4, 2, 4, 3, 4, 3, 4, 3, 4, 3, 6, 2, 4, 2, 4]
-
             },
             {
               name: 'Category B',
@@ -444,7 +435,6 @@ class MainView extends Component {
             },
 
           ]
-
         },
         {
           color: ['#0f63d6', '#0f78d6', '#0f8cd6', '#0fa0d6', '#0fb4d6'],
@@ -557,7 +547,6 @@ class MainView extends Component {
             },]
         },
         {
-
           title: [{
             text: 'Distribution by XXXX',
             left: 'center',
@@ -605,7 +594,6 @@ class MainView extends Component {
           ]
         },
         {
-
           title: [{
             text: 'Distribution by C',
             left: 'center',
@@ -729,11 +717,10 @@ class MainView extends Component {
       <div className="mainbox">
         <ul className="clearfix">
           <li>
-            <h1>Test</h1>
             <div className="boxall" style={{ height: "3.2rem" }}>
-              <div className="alltitle">xxxx Data 1</div>
+              <div className="alltitle">线路温度</div>
               <ReactECharts
-                option={chartOptions[0]}
+                option={chartOptions[3]}
                 notMerge={true}
                 lazyUpdate={true}
                 className="allnav"
@@ -742,7 +729,18 @@ class MainView extends Component {
               <div className="boxfoot"></div>
             </div>
             <div className="boxall" style={{ height: "3.2rem" }}>
-              <div className="alltitle">xxxx Data 2</div>
+              <div className="alltitle">实时用电量</div>
+              <ReactECharts
+                option={chartOptions[3]}
+                notMerge={true}
+                lazyUpdate={true}
+                className="allnav"
+                opts={{ renderer: 'svg' }}
+              />
+              <div className="boxfoot"></div>
+            </div>
+            <div className="boxall" style={{ height: "3.2rem" }}>
+              <div className="alltitle">漏电</div>
               <ReactECharts
                 option={chartOptions[1]}
                 notMerge={true}
@@ -751,16 +749,6 @@ class MainView extends Component {
                 opts={{ renderer: 'svg' }}
               />
               <div className="boxfoot"></div>
-            </div>
-            <div className="boxall" style={{ height: "3.2rem" }}>
-              <div style={{ height: "100%", width: "100%" }}>
-                <div className="sy" id="fb1"></div>
-                <div className="sy" id="fb2"></div>
-                <div className="sy" id="fb3"></div>
-              </div>
-              <div className="boxfoot">
-
-              </div>
             </div>
           </li>
           <li>
@@ -782,12 +770,12 @@ class MainView extends Component {
               <div className="map1"><img src={lbx} alt="lbx" /></div>
               <div className="map2"><img src={jt} alt="jt" /></div>
               <div className="map3"><img src={map} alt="map" /></div>
-              <div className="map4" id="map_1"></div>
+              {/* <div className="map4" id="map_1"></div> */}
             </div>
           </li>
           <li>
-            <div className="boxall" style={{ height: "3.4rem" }}>
-              <div className="alltitle">xxxx Data 3</div>
+            <div className="boxall" style={{ height: "3.2rem" }}>
+              <div className="alltitle">环境温湿度</div>
               <ReactECharts
                 option={chartOptions[3]}
                 notMerge={true}
@@ -798,7 +786,7 @@ class MainView extends Component {
               <div className="boxfoot"></div>
             </div>
             <div className="boxall" style={{ height: "3.2rem" }}>
-              <div className="alltitle">xxxx Data 4</div>
+              <div className="alltitle">空气质量</div>
               <ReactECharts
                 option={chartOptions[2]}
                 notMerge={true}
@@ -808,8 +796,8 @@ class MainView extends Component {
               />
               <div className="boxfoot"></div>
             </div>
-            <div className="boxall" style={{ height: "3rem" }}>
-              <div className="alltitle">xxxx Data 5</div>
+            <div className="boxall" style={{ height: "3.2rem" }}>
+              <div className="alltitle">紫外灯消毒记录</div>
               <ReactECharts
                 option={chartOptions[4]}
                 notMerge={true}

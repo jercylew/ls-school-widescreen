@@ -4,7 +4,7 @@ class FootView extends Component {
     render() {
         return (
             <div>
-                <h2 style={{textAlign: 'center', color: 'white'}}>XXXXXX CO., LTD (2022)</h2>
+                <h2 style={{textAlign: 'center', color: 'white'}}>Lengshuo (Shenzhen) CO., LTD (2022)</h2>
             </div>
         );
     }
