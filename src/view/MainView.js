@@ -4,7 +4,7 @@ import { dateToTimeString, dateToDateString } from '../lib/DateUtil'
 
 import lbx from '../picture/lbx.png'
 import jt from '../picture/jt.png'
-import map from '../picture/map.png'
+import map from '../images/layout-hgk-kindergarten.png'//'../picture/map.png'
 import weatherImg from '../images/weather_img01.png';
 
 import ReactECharts from 'echarts-for-react';
@@ -67,7 +67,8 @@ class MainView extends Component {
   }
 
   componentWillUnmount() {
-    clearInterval(this.timerID);
+    clearInterval(this.timerIDData);
+    clearInterval(this.timerIDDatetime);
   }
 
   tickDatetime() {
@@ -90,13 +91,16 @@ class MainView extends Component {
         [1, 5, 3, 3, 3, 7, 3, 6, 2, 12, 2, 4, 9, 4, 3, 4, 6, 4, 3, 9, 2, 5, 2, 6],
         [5, 3, 10, 4, 6, 4, 12, 6, 2, 7, 2, 4, 8, 4, 3, 5, 3, 4, 9, 6, 3, 4, 1, 8]
       ],
-      leakCurrent: 0,
-      alarmLogChartOption: {
-        leakCurrentCounts: 2,
-        overCurrent: 1,
-        overTemp: 1
+      leakCurrent: 5,
+      alarmLogChartData: {
+        leakCurrentCounts: 1,
+        overCurrentCounts: 2,
+        overTempCounts: 2
       },
-      envTempHumChartData: [[], []],
+      envTempHumChartData: [
+        [1, 4, 7, 2, 5, 4, 9, 12, 2, 4, 8, 4, 3, 5, 3, 4, 1, 4, 3, 5, 2, 9, 2, 4],
+        [3, 4, 3, 4, 3, 4, 3, 13, 2, 4, 1, 4, 3, 8, 3, 6, 3, 4, 3, 9, 2, 4, 7, 11]
+      ],
       uvLightLogChartData: [
         { time: '2022-01-23 21:00:00', duration: 62 },
         { time: '2022-01-23 21:00:00', duration: 63 },
@@ -125,7 +129,7 @@ class MainView extends Component {
       },
       legend: {
         top: '0%',
-        data: ['安卓', 'IOS'],
+        data: ['总线路', '空调', '插座'],
         textStyle: {
           color: 'rgba(255,255,255,.5)',
           fontSize: '12',
@@ -300,7 +304,7 @@ class MainView extends Component {
       },
       legend: {
         top: '0%',
-        data: ['安卓', 'IOS'],
+        data: ['总电流', '总电量'],
         textStyle: {
           color: 'rgba(255,255,255,.5)',
           fontSize: '12',
@@ -447,7 +451,8 @@ class MainView extends Component {
       xAxis: {
         show: false
       },
-      yAxis: [{
+      yAxis: [
+      {
         show: true,
         data: ['大一班'], //['大一班', '大二班', '大三班', '大四班']
         inverse: true,
@@ -469,13 +474,13 @@ class MainView extends Component {
           },
           rich: {
             lg: {
-              backgroundColor: '#339911',
+              backgroundColor: '#ff00ff',
               color: '#fff',
               borderRadius: 15,
               // padding: 5,
               align: 'center',
-              width: 15,
-              height: 15
+              width: 18,
+              height: 18
             },
           }
         },
@@ -506,7 +511,7 @@ class MainView extends Component {
           name: '条',
           type: 'bar',
           yAxisIndex: 0,
-          data: [35], //[70, 34, 60, 78] for each classroom
+          data: [((this.state.leakCurrent/30) * 100).toFixed(2)], //[70, 34, 60, 78] for each classroom, leak
           barWidth: 20,
           itemStyle: {
             normal: {
@@ -519,7 +524,8 @@ class MainView extends Component {
           label: {
             normal: {
               show: true,
-              position: 'inside',
+              color: 'rgb(255, 255, 255, .8)',
+              position: 'top',
               formatter: '{c}%'
             }
           },
@@ -543,36 +549,35 @@ class MainView extends Component {
     ]
     };
     const alarmLogChartOption = {
-      color: ['#0f63d6', '#0f78d6', '#0f8cd6', '#0fa0d6', '#0fb4d6'],
+      color: ['#1affff', '#ffcc99', '#cc0066'],
       tooltip: {
         show: true,
-        formatter: "{a} : {c} "
+        formatter: "{a} : {c} "   //TODO: show the correct value (real = value / 2)
       },
       legend: {
         itemWidth: 10,
         itemHeight: 10,
         itemGap: 12,
         // bottom: '3%',
-        data: ['漏电流', '过流', '高温', 'City 4', 'City 5'],
+        data: ['漏电流', '过流', '高温'],
         textStyle: {
           color: 'rgba(255,255,255,.6)',
         }
       },
-
       series: [
         {
           name: '漏电流',
           type: 'pie',
           clockWise: false,
           center: ['50%', '42%'],
-          radius: ['30%', '30%'],
+          radius: ['21%', '30%'],
           itemStyle: dataStyle,
-          hoverAnimation: false,
+          hoverAnimation: true,
           data: [{
-            value: 80,
+            value: this.state.alarmLogChartData.leakCurrentCounts * 2, //Show with scaled twice, this assuming the count not >= (100/2=50)
             name: '01'
           }, {
-            value: 20,
+            value: 100 - this.state.alarmLogChartData.leakCurrentCounts * 2,
             name: 'invisible',
             tooltip: { show: false },
             itemStyle: placeHolderStyle
@@ -583,14 +588,14 @@ class MainView extends Component {
           type: 'pie',
           clockWise: false,
           center: ['50%', '42%'],
-          radius: ['49%', '60%'],
+          radius: ['31%', '40%'],
           itemStyle: dataStyle,
-          hoverAnimation: false,
+          hoverAnimation: true,
           data: [{
-            value: 70,
+            value: this.state.alarmLogChartData.overCurrentCounts * 2,
             name: '02'
           }, {
-            value: 30,
+            value: 100 - this.state.alarmLogChartData.overCurrentCounts * 2,
             name: 'invisible',
             tooltip: { show: false },
             itemStyle: placeHolderStyle
@@ -600,56 +605,21 @@ class MainView extends Component {
           name: '高温',
           type: 'pie',
           clockWise: false,
-          hoverAnimation: false,
+          hoverAnimation: true,
           center: ['50%', '42%'],
-          radius: ['39%', '50%'],
+          radius: ['41%', '50%'],
           itemStyle: dataStyle,
           data: [{
-            value: 65,
+            value: this.state.alarmLogChartData.overTempCounts * 2,
             name: '03'
           }, {
-            value: 35,
+            value: 100 - this.state.alarmLogChartData.overTempCounts * 2,
             name: 'invisible',
             tooltip: { show: false },
             itemStyle: placeHolderStyle
           }]
-        },
-        {
-          name: 'State D',
-          type: 'pie',
-          clockWise: false,
-          hoverAnimation: false,
-          center: ['50%', '42%'],
-          radius: ['29%', '40%'],
-          itemStyle: dataStyle,
-          data: [{
-            value: 60,
-            name: '04'
-          }, {
-            value: 40,
-            name: 'invisible',
-            tooltip: { show: false },
-            itemStyle: placeHolderStyle
-          }]
-        },
-        {
-          name: 'State E',
-          type: 'pie',
-          clockWise: false,
-          hoverAnimation: false,
-          center: ['50%', '42%'],
-          radius: ['20%', '30%'],
-          itemStyle: dataStyle,
-          data: [{
-            value: 50,
-            name: '05'
-          }, {
-            value: 50,
-            name: 'invisible',
-            tooltip: { show: false },
-            itemStyle: placeHolderStyle
-          }]
-      }]
+        }
+        ]
     };
     const envTempHumChartOption = {
       tooltip: {
@@ -662,7 +632,7 @@ class MainView extends Component {
       },
       legend: {
         top: '0%',
-        data: ['安卓', 'IOS'],
+        data: ['温度', '湿度'],
         textStyle: {
           color: 'rgba(255,255,255,.5)',
           fontSize: '12',
@@ -688,13 +658,10 @@ class MainView extends Component {
           lineStyle: {
             color: 'rgba(255,255,255,.2)'
           }
-
         },
-
         data: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24']
-
-      }, {
-
+      },
+      {
         axisPointer: { show: false },
         axisLine: { show: false },
         position: 'bottom',
@@ -714,7 +681,6 @@ class MainView extends Component {
             fontSize: 12,
           },
         },
-
         splitLine: {
           lineStyle: {
             color: 'rgba(255,255,255,.1)'
@@ -723,7 +689,7 @@ class MainView extends Component {
       }],
       series: [
         {
-          name: '空调',
+          name: '温度',
           type: 'line',
           smooth: true,
           symbol: 'circle',
@@ -754,17 +720,16 @@ class MainView extends Component {
               borderWidth: 12
             }
           },
-          data: [3, 4, 3, 4, 3, 4, 3, 6, 2, 4, 2, 4, 3, 4, 3, 4, 3, 4, 3, 6, 2, 4, 2, 4]
+          data: this.state.envTempHumChartData[0]
         },
         {
-          name: 'Category B',
+          name: '湿度',
           type: 'line',
           smooth: true,
           symbol: 'circle',
           symbolSize: 5,
           showSymbol: false,
           lineStyle: {
-
             normal: {
               color: '#00d887',
               width: 2
@@ -789,7 +754,7 @@ class MainView extends Component {
               borderWidth: 12
             }
           },
-          data: [5, 3, 5, 6, 1, 5, 3, 5, 6, 4, 6, 4, 8, 3, 5, 6, 1, 5, 3, 7, 2, 5, 1, 4]
+          data: this.state.envTempHumChartData[1]
         },
       ]
     };
@@ -903,13 +868,6 @@ class MainView extends Component {
             </div>
             <div className="boxall" style={{ height: "4.2rem" }}>
               <div className="alltitle">紫外灯消毒记录</div>
-              {/* <ReactECharts
-                option={this.state.uvLightLogChartOption}
-                notMerge={true}
-                lazyUpdate={true}
-                className="allnav"
-                opts={{ renderer: 'svg' }}
-              /> */}
               <div class="main_table t_btn3">
                 <table>
                   <thead>
@@ -917,40 +875,20 @@ class MainView extends Component {
                       <th>序号</th>
                       <th>时间</th>
                       <th>持续时间</th>
-                      <th>日期</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>2.53</td>
-                      <td>142.65</td>
-                      <td>145.18</td>
-                      <td>2018年</td>
-                    </tr>
-                    <tr>
-                      <td>2.52</td>
-                      <td>139.95</td>
-                      <td>142.47</td>
-                      <td>2017年</td>
-                    </tr>
-                    <tr>
-                      <td>2.65</td>
-                      <td>137.96</td>
-                      <td>140.61</td>
-                      <td>2016年</td>
-                    </tr>
-                    <tr>
-                      <td>2.97</td>
-                      <td>131.48</td>
-                      <td>134.45</td>
-                      <td>2015年</td>
-                    </tr>
-                    <tr>
-                      <td>3.23</td>
-                      <td>99.99</td>
-                      <td>103.22</td>
-                      <td>2014年</td>
-                    </tr>
+                    {
+                      this.state.uvLightLogChartData.map((log, index) => {
+                        return (
+                          <tr className={ (index%2 === 1) ? 'table_odd_row' : ''  }>
+                            <td>{index+1}</td>
+                            <td>{log.time}</td>
+                            <td>{log.duration}</td>
+                          </tr>
+                        );
+                      })
+                    }
                   </tbody>
                 </table>
               </div>

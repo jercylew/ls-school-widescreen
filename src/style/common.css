@@ -374,7 +374,7 @@ a:hover {
 .map2,
 .map3 {
 	position: absolute;
-	opacity: .5
+	opacity: .85
 }
 
 .map1 {
@@ -822,13 +822,10 @@ a:hover {
     font-size: 12.8px;
     text-align: center;
 }
-.main_table tbody tr:nth-child(1),
-.main_table tbody tr:nth-child(3),
-.main_table tbody tr:nth-child(5){
-    background-color: #072951;
-    box-shadow:-10px 0px 15px #034c6a inset,   /*左边阴影*/
-    10px 0px 15px #034c6a inset;  /*右边阴影*/
-    /*0px 10px 15px #034c6a inset;*/
+.table_odd_row {
+	background-color: #072951;
+    box-shadow:-10px 0px 15px #034c6a inset,
+    10px 0px 15px #034c6a inset;
 }
 
   
