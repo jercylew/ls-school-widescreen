@@ -440,86 +440,114 @@ class MainView extends Component {
         }]
       },
       alarmLogChartOption: {
-        //  backgroundColor: '#00265f',
+        color: ['#0f63d6', '#0f78d6', '#0f8cd6', '#0fa0d6', '#0fb4d6'],
         tooltip: {
-          trigger: 'axis',
-          axisPointer: { type: 'shadow' }
+          show: true,
+          formatter: "{a} : {c} "
         },
-        grid: {
-          left: '0%',
-          top: '10px',
-          right: '0%',
-          bottom: '4%',
-          containLabel: true
-        },
-        xAxis: [{
-          type: 'category',
-          data: ['Area 1', 'Area 2', 'Area 3', 'Area 4', 'Area 5', 'Area 6', 'Area 7'],
-          axisLine: {
-            show: true,
-            lineStyle: {
-              color: "rgba(255,255,255,.1)",
-              width: 1,
-              type: "solid"
-            },
-          },
+        legend: {
+          itemWidth: 10,
+          itemHeight: 10,
+          itemGap: 12,
+          bottom: '3%',
 
-          axisTick: {
-            show: false,
-          },
-          axisLabel: {
-            interval: 0,
-            // rotate:50,
-            show: true,
-            splitNumber: 15,
-            textStyle: {
-              color: "rgba(255,255,255,.6)",
-              fontSize: '12',
-            },
-          },
-        }],
-        yAxis: [{
-          type: 'value',
-          axisLabel: {
-            //formatter: '{value} %'
-            show: true,
-            textStyle: {
-              color: "rgba(255,255,255,.6)",
-              fontSize: '12',
-            },
-          },
-          axisTick: {
-            show: false,
-          },
-          axisLine: {
-            show: true,
-            lineStyle: {
-              color: "rgba(255,255,255,.1	)",
-              width: 1,
-              type: "solid"
-            },
-          },
-          splitLine: {
-            lineStyle: {
-              color: "rgba(255,255,255,.1)",
-            }
+          data: ['漏电流', '过流', '高温', 'City 4', 'City 5'],
+          textStyle: {
+            color: 'rgba(255,255,255,.6)',
           }
-        }],
+        },
+
         series: [
           {
-            type: 'bar',
-            data: [1500, 1200, 600, 200, 300, 300, 900],
-            barWidth: '35%',
-            // barGap: 1,
-            itemStyle: {
-              normal: {
-                color: '#27d08a',
-                opacity: 1,
-                barBorderRadius: 5,
-              }
-            }
-          }
-        ]
+            name: 'State A',
+            type: 'pie',
+            clockWise: false,
+            center: ['50%', '42%'],
+            radius: ['30%', '30%'],
+            itemStyle: dataStyle,
+            hoverAnimation: false,
+            data: [{
+              value: 80,
+              name: '01'
+            }, {
+              value: 20,
+              name: 'invisible',
+              tooltip: { show: false },
+              itemStyle: placeHolderStyle
+            }]
+          },
+          {
+            name: 'State B',
+            type: 'pie',
+            clockWise: false,
+            center: ['50%', '42%'],
+            radius: ['49%', '60%'],
+            itemStyle: dataStyle,
+            hoverAnimation: false,
+            data: [{
+              value: 70,
+              name: '02'
+            }, {
+              value: 30,
+              name: 'invisible',
+              tooltip: { show: false },
+              itemStyle: placeHolderStyle
+            }]
+          },
+          {
+            name: 'State C',
+            type: 'pie',
+            clockWise: false,
+            hoverAnimation: false,
+            center: ['50%', '42%'],
+            radius: ['39%', '50%'],
+            itemStyle: dataStyle,
+            data: [{
+              value: 65,
+              name: '03'
+            }, {
+              value: 35,
+              name: 'invisible',
+              tooltip: { show: false },
+              itemStyle: placeHolderStyle
+            }]
+          },
+          {
+            name: 'State D',
+            type: 'pie',
+            clockWise: false,
+            hoverAnimation: false,
+            center: ['50%', '42%'],
+            radius: ['29%', '40%'],
+            itemStyle: dataStyle,
+            data: [{
+              value: 60,
+              name: '04'
+            }, {
+              value: 40,
+              name: 'invisible',
+              tooltip: { show: false },
+              itemStyle: placeHolderStyle
+            }]
+          },
+          {
+            name: 'State E',
+            type: 'pie',
+            clockWise: false,
+            hoverAnimation: false,
+            center: ['50%', '42%'],
+            radius: ['20%', '30%'],
+            itemStyle: dataStyle,
+            data: [{
+              value: 50,
+              name: '05'
+            }, {
+              value: 50,
+              name: 'invisible',
+              tooltip: { show: false },
+              itemStyle: placeHolderStyle
+            }]
+          },]
       },
       envTempHumChartOption: {
         tooltip: {
@@ -1204,86 +1232,113 @@ class MainView extends Component {
         }]
       },
       alarmLogChartOption: {
-        //  backgroundColor: '#00265f',
+        color: ['#0f63d6', '#0f78d6', '#0f8cd6', '#0fa0d6', '#0fb4d6'],
         tooltip: {
-          trigger: 'axis',
-          axisPointer: { type: 'shadow' }
+          show: true,
+          formatter: "{a} : {c} "
         },
-        grid: {
-          left: '0%',
-          top: '10px',
-          right: '0%',
-          bottom: '4%',
-          containLabel: true
-        },
-        xAxis: [{
-          type: 'category',
-          data: ['Area 1', 'Area 2', 'Area 3', 'Area 4', 'Area 5', 'Area 6', 'Area 7'],
-          axisLine: {
-            show: true,
-            lineStyle: {
-              color: "rgba(255,255,255,.1)",
-              width: 1,
-              type: "solid"
-            },
-          },
-
-          axisTick: {
-            show: false,
-          },
-          axisLabel: {
-            interval: 0,
-            // rotate:50,
-            show: true,
-            splitNumber: 15,
-            textStyle: {
-              color: "rgba(255,255,255,.6)",
-              fontSize: '12',
-            },
-          },
-        }],
-        yAxis: [{
-          type: 'value',
-          axisLabel: {
-            //formatter: '{value} %'
-            show: true,
-            textStyle: {
-              color: "rgba(255,255,255,.6)",
-              fontSize: '12',
-            },
-          },
-          axisTick: {
-            show: false,
-          },
-          axisLine: {
-            show: true,
-            lineStyle: {
-              color: "rgba(255,255,255,.1	)",
-              width: 1,
-              type: "solid"
-            },
-          },
-          splitLine: {
-            lineStyle: {
-              color: "rgba(255,255,255,.1)",
-            }
+        legend: {
+          itemWidth: 10,
+          itemHeight: 10,
+          itemGap: 12,
+          // bottom: '3%',
+          data: ['漏电流', '过流', '高温', 'City 4', 'City 5'],
+          textStyle: {
+            color: 'rgba(255,255,255,.6)',
           }
-        }],
+        },
+
         series: [
           {
-            type: 'bar',
-            data: [1500, 1200, 600, 200, 300, 300, 900],
-            barWidth: '35%',
-            // barGap: 1,
-            itemStyle: {
-              normal: {
-                color: '#27d08a',
-                opacity: 1,
-                barBorderRadius: 5,
-              }
-            }
-          }
-        ]
+            name: '漏电流',
+            type: 'pie',
+            clockWise: false,
+            center: ['50%', '42%'],
+            radius: ['30%', '30%'],
+            itemStyle: dataStyle,
+            hoverAnimation: false,
+            data: [{
+              value: 80,
+              name: '01'
+            }, {
+              value: 20,
+              name: 'invisible',
+              tooltip: { show: false },
+              itemStyle: placeHolderStyle
+            }]
+          },
+          {
+            name: '过流',
+            type: 'pie',
+            clockWise: false,
+            center: ['50%', '42%'],
+            radius: ['49%', '60%'],
+            itemStyle: dataStyle,
+            hoverAnimation: false,
+            data: [{
+              value: 70,
+              name: '02'
+            }, {
+              value: 30,
+              name: 'invisible',
+              tooltip: { show: false },
+              itemStyle: placeHolderStyle
+            }]
+          },
+          {
+            name: '高温',
+            type: 'pie',
+            clockWise: false,
+            hoverAnimation: false,
+            center: ['50%', '42%'],
+            radius: ['39%', '50%'],
+            itemStyle: dataStyle,
+            data: [{
+              value: 65,
+              name: '03'
+            }, {
+              value: 35,
+              name: 'invisible',
+              tooltip: { show: false },
+              itemStyle: placeHolderStyle
+            }]
+          },
+          {
+            name: 'State D',
+            type: 'pie',
+            clockWise: false,
+            hoverAnimation: false,
+            center: ['50%', '42%'],
+            radius: ['29%', '40%'],
+            itemStyle: dataStyle,
+            data: [{
+              value: 60,
+              name: '04'
+            }, {
+              value: 40,
+              name: 'invisible',
+              tooltip: { show: false },
+              itemStyle: placeHolderStyle
+            }]
+          },
+          {
+            name: 'State E',
+            type: 'pie',
+            clockWise: false,
+            hoverAnimation: false,
+            center: ['50%', '42%'],
+            radius: ['20%', '30%'],
+            itemStyle: dataStyle,
+            data: [{
+              value: 50,
+              name: '05'
+            }, {
+              value: 50,
+              name: 'invisible',
+              tooltip: { show: false },
+              itemStyle: placeHolderStyle
+            }]
+        }]
       },
       envTempHumChartOption: {
         tooltip: {
@@ -1587,8 +1642,8 @@ class MainView extends Component {
             <div className="bar">
               <div className="barbox">
                 <ul className="clearfix">
-                  <li className="pulll_left counter">04</li>
-                  <li className="pulll_left counter">大（一）班</li>
+                  <li className="pulll_left counter" style={{color: '#ffeb7b'}}>04</li>
+                  <li className="pulll_left counter" style={{color: '#ffeb7b'}}>大（一）班</li>
                 </ul>
               </div>
               <div className="barbox2">
@@ -1604,16 +1659,14 @@ class MainView extends Component {
               <div className="map3"><img src={map} alt="map" /></div>
               {/* <div className="map4" id="map_1"></div> */}
             </div>
-            <div className="boxall" style={{ height: "1.5rem" }}>
+            <div className="boxall" style={{ height: "2.7rem" }}>
               <div className="alltitle">报警记录</div>
-              {/* <ReactECharts
-                option={chartOptions[1]}
+              <ReactECharts
+                option={this.state.alarmLogChartOption}
                 notMerge={true}
                 lazyUpdate={true}
-                className="allnav"
                 opts={{ renderer: 'svg' }}
               />
-              */}
               <div className="boxfoot"></div>
             </div>
           </li>
@@ -1656,13 +1709,57 @@ class MainView extends Component {
             </div>
             <div className="boxall" style={{ height: "4.2rem" }}>
               <div className="alltitle">紫外灯消毒记录</div>
-              <ReactECharts
+              {/* <ReactECharts
                 option={this.state.uvLightLogChartOption}
                 notMerge={true}
                 lazyUpdate={true}
                 className="allnav"
                 opts={{ renderer: 'svg' }}
-              />
+              /> */}
+              <div class="main_table t_btn3">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>序号</th>
+                      <th>时间</th>
+                      <th>持续时间</th>
+                      <th>日期</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>2.53</td>
+                      <td>142.65</td>
+                      <td>145.18</td>
+                      <td>2018年</td>
+                    </tr>
+                    <tr>
+                      <td>2.52</td>
+                      <td>139.95</td>
+                      <td>142.47</td>
+                      <td>2017年</td>
+                    </tr>
+                    <tr>
+                      <td>2.65</td>
+                      <td>137.96</td>
+                      <td>140.61</td>
+                      <td>2016年</td>
+                    </tr>
+                    <tr>
+                      <td>2.97</td>
+                      <td>131.48</td>
+                      <td>134.45</td>
+                      <td>2015年</td>
+                    </tr>
+                    <tr>
+                      <td>3.23</td>
+                      <td>99.99</td>
+                      <td>103.22</td>
+                      <td>2014年</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
               <div className="boxfoot"></div>
             </div>
           </li>

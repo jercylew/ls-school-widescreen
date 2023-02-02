@@ -356,7 +356,7 @@ a:hover {
 
 .map {
 	position: relative;
-	height: 7.2rem;
+	height: 6.0rem;
 	z-index: 9;
 	padding-left: 1rem;
 	padding-right: 1rem;
@@ -786,6 +786,49 @@ a:hover {
     flex-flow: row nowrap;
     justify-content: center;
     align-items: center;
+}
+
+/* Table */
+.main_table tr{
+    height: 42px;
+}
+.main_table{
+    width: 100%;
+    margin-top: 25px;
+}
+.main_table table{
+    width: 100%;
+}
+.main_table thead tr{
+    height: 42px;
+}
+.main_table th{
+    font-size: 14px;
+    font-weight: 600;
+    color:#61d2f7;
+    text-align: center;
+}
+.main_table th:nth-child(1){
+    width: 30%;
+}
+.main_table th:nth-child(2){
+    width: 35%;
+}
+.main_table th:nth-child(2){
+    width: 35%;
+}
+.main_table td{
+    color:#fff;
+    font-size: 12.8px;
+    text-align: center;
+}
+.main_table tbody tr:nth-child(1),
+.main_table tbody tr:nth-child(3),
+.main_table tbody tr:nth-child(5){
+    background-color: #072951;
+    box-shadow:-10px 0px 15px #034c6a inset,   /*左边阴影*/
+    10px 0px 15px #034c6a inset;  /*右边阴影*/
+    /*0px 10px 15px #034c6a inset;*/
 }
 
   
