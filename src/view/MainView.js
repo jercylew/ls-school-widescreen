@@ -102,13 +102,13 @@ class MainView extends Component {
         [3, 4, 3, 4, 3, 4, 3, 13, 2, 4, 1, 4, 3, 8, 3, 6, 3, 4, 3, 9, 2, 4, 7, 11]
       ],
       uvLightLogChartData: [
-        { time: '2022-01-23 21:00:00', duration: 62 },
-        { time: '2022-01-23 21:00:00', duration: 63 },
-        { time: '2022-01-23 21:00:00', duration: 61 },
-        { time: '2022-01-23 21:00:00', duration: 61 },
-        { time: '2022-01-23 21:00:00', duration: 64 },
-        { time: '2022-01-23 21:00:00', duration: 63 },
-        { time: '2022-01-23 21:00:00', duration: 62 },
+        {id: 0,  time: '2022-01-23 21:00:00', duration: 62 },
+        {id: 1,  time: '2022-01-23 21:00:00', duration: 63 },
+        {id: 2,  time: '2022-01-23 21:00:00', duration: 61 },
+        {id: 3,  time: '2022-01-23 21:00:00', duration: 61 },
+        {id: 4,  time: '2022-01-23 21:00:00', duration: 64 },
+        {id: 5,  time: '2022-01-23 21:00:00', duration: 63 },
+        {id: 6,  time: '2022-01-23 21:00:00', duration: 62 },
       ]
     });
   }
@@ -785,13 +785,13 @@ class MainView extends Component {
               />
               <div className="boxfoot"></div>
             </div>
-            <div className="boxall" style={{ height: "3.2rem" }}>
+            <div className="boxall" style={{ height: "1.7rem" }}>
               <div className="alltitle">漏电流</div>
               <ReactECharts
                 option={leakCurrentChartOption}
                 notMerge={true}
                 lazyUpdate={true}
-                className="allnav"
+                style={{height: '100%'}}
                 opts={{ renderer: 'svg' }}
               />
               <div className="boxfoot"></div>
@@ -818,7 +818,7 @@ class MainView extends Component {
               <div className="map3"><img src={map} alt="map" /></div>
               {/* <div className="map4" id="map_1"></div> */}
             </div>
-            <div className="boxall" style={{ height: "2.7rem" }}>
+            <div className="boxall" style={{ height: "2.65rem" }}>
               <div className="alltitle">报警记录</div>
               <ReactECharts
                 option={alarmLogChartOption}
@@ -841,7 +841,7 @@ class MainView extends Component {
               />
               <div className="boxfoot"></div>
             </div>
-            <div className="boxall" style={{ height: "2.2rem" }}>
+            <div className="boxall" style={{ height: "1.55rem" }}>
               <div className="alltitle">空气质量</div>
               <div className='allnav' style={{paddingTop: '0.2rem'}}>
                 <div style={{ marginVertical: '4rem', height: '2.5rem'}}>
@@ -866,7 +866,7 @@ class MainView extends Component {
               </div>
               <div className="boxfoot"></div>
             </div>
-            <div className="boxall" style={{ height: "4.2rem" }}>
+            <div className="boxall" style={{ height: "3.36rem" }}>
               <div className="alltitle">紫外灯消毒记录</div>
               <div class="main_table t_btn3">
                 <table>
@@ -881,7 +881,7 @@ class MainView extends Component {
                     {
                       this.state.uvLightLogChartData.map((log, index) => {
                         return (
-                          <tr className={ (index%2 === 1) ? 'table_odd_row' : ''  }>
+                          <tr key={`uvLog-${log.id}`} className={ (index%2 === 1) ? 'table_odd_row' : ''  }>
                             <td>{index+1}</td>
                             <td>{log.time}</td>
                             <td>{log.duration}</td>

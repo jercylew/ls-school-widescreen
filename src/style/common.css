@@ -172,12 +172,12 @@ a:hover {
 }
 
 .head {
-	height: 1.05rem;
+	height: 1rem;
 	background: url(../images/head_bg.png) no-repeat center center;
 	background-size: 100% 100%;
 	position: relative;
 	z-index: 100;
-	margin-top: 20px;
+	/* margin-top: 18px; */
 }
 
 .head h1 {
@@ -216,7 +216,7 @@ a:hover {
 }
 
 .mainbox {
-	padding: .1rem .1rem 0rem .1rem;
+	padding: 0rem .1rem 0rem .1rem;
 }
 
 .mainbox>ul {}
@@ -356,7 +356,7 @@ a:hover {
 
 .map {
 	position: relative;
-	height: 6.0rem;
+	height: 4.5rem;
 	z-index: 9;
 	padding-left: 1rem;
 	padding-right: 1rem;
@@ -384,14 +384,14 @@ a:hover {
 }
 
 .map2 {
-	top: .85rem;
+	top: .45rem;
 	z-index: 3;
 	opacity: 0.2;
 	animation: myfirst 10s infinite linear;
 }
 
 .map3 {
-	top: 1.07rem;
+	top: .25rem;
 	z-index: 1;
 }
 
@@ -790,11 +790,10 @@ a:hover {
 
 /* Table */
 .main_table tr{
-    height: 42px;
+    height: .3rem;
 }
 .main_table{
     width: 100%;
-    margin-top: 25px;
 }
 .main_table table{
     width: 100%;
