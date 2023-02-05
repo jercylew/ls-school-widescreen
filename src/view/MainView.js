@@ -407,7 +407,7 @@ class MainView extends Component {
     this.tickDataCount++;
     this.tickRoomCount++;
 
-    if (this.tickRoomCount === 10) { //30 seconds
+    if (this.tickRoomCount === 15) { //30 seconds
       console.log('Time to switch to the next classroom...');
       let newIndex = this.state.currentClassRoomIndex + 1;
       if (newIndex === classRooms.length) {
@@ -466,9 +466,6 @@ class MainView extends Component {
     const { datetime } = this.state;
     const timeStr = dateToTimeString(datetime);
     const dateStr = dateToDateString(datetime);
-
-    // console.log('Current temp state: ', this.state.chTempChartData);
-
     const chTempChartOption = {
       tooltip: {
         trigger: 'axis',
@@ -805,7 +802,7 @@ class MainView extends Component {
       yAxis: [
         {
           show: true,
-          data: ['大一班'], //['大一班', '大二班', '大三班', '大四班']
+          data: [this.state.currentClassRoomName], //['大一班', '大二班', '大三班', '大四班']
           inverse: true,
           axisLine: {
             show: false
@@ -839,8 +836,11 @@ class MainView extends Component {
         {
           show: true,
           inverse: true,
-          data: [30], // [702, 406, 664, 793], per
+          data: [30], // [702, 406, 664, 793],
           axisLabel: {
+            formatter: (value, index) => {
+              return `${value} mA`;
+            },
             textStyle: {
               fontSize: 12,
               color: '#fff',
