@@ -35,34 +35,242 @@ const placeHolderStyle = {
 };
 
 const myColor = ['#33cc33', '#ff0000'];//['#1089E7', '#F57474', '#56D0E3', '#F8B448', '#8B78F6'];
+// TODO: configure this in a JSON file, using seaperate MESH
+const classRooms = [
+  { id: '63dcbd467578b047b751ce3a', pm: 237, refrg: 186, rm: [227, 229] }, //大一班
+  { id: '63dcbd8c7578b047b751ef40', pm: 236, refrg: 187, rm: [223, 228] }, //大二班
+  { id: '63dce0407578b047b7639f9b', pm: 234, refrg: 188, rm: [222, 224] }, //大三班
+  { id: '63dcf0057578b047b76beb0e', pm: 235, refrg: 189, rm: [225, 226] }, //大四班
+];
+
+const getSingleDataName = dataInfoStr => {
+  if (dataInfoStr.indexOf(':') < 0) {
+    return '';
+  }
+  const arDataInfo = dataInfoStr.split(':');
+  if (arDataInfo.length !== 2) {
+    return '';
+  }
+  return arDataInfo[0];
+};
+
+const getSingleDataValueString = dataInfoStr => {
+  if (dataInfoStr.indexOf(':') < 0) {
+    return dataInfoStr;
+  }
+  const arDataInfo = dataInfoStr.split(':');
+  if (arDataInfo.length !== 2) {
+    return "";
+  }
+  return arDataInfo[1];
+};
+
+const getSingleDataValueInt = dataInfoStr => {
+  if (dataInfoStr.indexOf(':') < 0) {
+    return parseInt(dataInfoStr);
+  }
+  const arDataInfo = dataInfoStr.split(':');
+  if (arDataInfo.length !== 2) {
+    return 0;
+  }
+  return parseInt(arDataInfo[1]);
+};
+
+const getSingleDataValueFloat = dataInfoStr => {
+  if (dataInfoStr.indexOf(':') < 0) {
+    return parseFloat(dataInfoStr).toFixed(2);
+  }
+  const arDataInfo = dataInfoStr.split(':');
+  if (arDataInfo.length !== 2) {
+    return 0;
+  }
+  return parseFloat(arDataInfo[1]);
+};
+
+const getMultDataValueString = dataInfoStr => {
+  let outDataVals = [];
+
+  if (dataInfoStr.indexOf(',') < 0) {
+    return getSingleDataValueString(dataInfoStr);
+  }
+
+  let arDataEntries = dataInfoStr.split(',');
+  outDataVals = arDataEntries.map((entry, index) => {
+    return {
+      name: getSingleDataName(entry),
+      value: getSingleDataValueString(entry)
+    };
+  });
+  return outDataVals;
+}
+
+const getMultDataValueFloat = dataInfoStr => {
+  let outDataVals = [];
+
+  if (dataInfoStr.indexOf(',') < 0) {
+    return getSingleDataValueFloat(dataInfoStr);
+  }
+
+  let arDataEntries = dataInfoStr.split(',');
+  outDataVals = arDataEntries.map((entry, index) => {
+    return {
+      name: getSingleDataName(entry),
+      value: getSingleDataValueFloat(entry)
+    };
+  });
+  return outDataVals;
+}
+
+const getMultDataValueInt = dataInfoStr => {
+  let outDataVals = [];
+
+  if (dataInfoStr.indexOf(',') < 0) {
+    return getSingleDataValueFloat(dataInfoStr);
+  }
+
+  let arDataEntries = dataInfoStr.split(',');
+  outDataVals = arDataEntries.map((entry, index) => {
+    return {
+      name: getSingleDataName(entry),
+      value: getSingleDataValueInt(entry)
+    };
+  });
+  return outDataVals;
+}
+
+const getChIndex = text => {
+  let n = parseInt(text);
+
+  if (!isNaN(n)) {
+    return (n-1);
+  }
+
+  text = text.toLowerCase();
+  if (text === 'a') {
+    n = 0;
+  }
+  if (text === 'b') {
+    n = 1;
+  }
+  if (text === 'c') {
+    n = 2;
+  }
+  if (text === 'd') {
+    n = 3;
+  }
+  if (text === 'e') {
+    n = 4;
+  }
+  return n;
+};
+
 class MainView extends Component {
   constructor(props) {
     super(props);
 
     this.initialState = {
-      chTempChartData: [[], [], []], //[[], [], []] 3-channel temp data
-      chPowerChartData: [[], [], [], [], []], //[[], [], [], [], []] 5-channel power (current * 220V) data
+      // Time series data
+      chTempChartData: [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      ], //[[], [], []] 3-channel temp data
+      chPowerChartData: [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      ], //[[], [], [], [], []] 5-channel power (current * 220V) data
+      envTempHumChartData: [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      ], //[[], []] temp and humidity
+
+      uvLightLogChartData: [], //[{datetime, duration}]
+      chError: [], // [{ch: 0, err: false, type: null}, {ch: 1, err: true, type: 'over_current'}], type = 'over_current|over_temp|leak_current'
       leakCurrent: 0,
       alarmLogChartData: {
         leakCurrentCounts: 0,
         overCurrentCounts: 0,
         overTempCounts: 0
       },
-      envTempHumChartData: [[], []], //[[], []] temp and humidity
-      uvLightLogChartData: [], //[{datetime, duration}]
-      datetime: new Date()
+      datetime: new Date(),
+      currentClassRoomIndex: 0,
+      currentClassRoomName: ''
     };
     this.state = this.initialState;
+    this.tickDatetime = this.tickDatetime.bind(this);
+    this.tickData = this.tickData.bind(this);
+    this.refreshChart = this.refreshChart.bind(this);
+    this.refreshHistory = this.refreshHistory.bind(this);
+    this.tickDataCount = 0;
+    this.tickRoomCount = 0;
+    this.historyChartsData = {
+      '63dcbd467578b047b751ce3a': {
+        chTempChartData: [
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        ], //[[], [], []] 3-channel temp data
+        chPowerChartData: [
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        ], //[[], [], [], [], []] 5-channel power (current * 220V) data
+        envTempHumChartData: [
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        ], //[[], []] temp and humidity
+      },
+      '63dcbd8c7578b047b751ef40': {
+        chTempChartData: [
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        ], //[[], [], []] 3-channel temp data
+        chPowerChartData: [
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        ], //[[], [], [], [], []] 5-channel power (current * 220V) data
+        envTempHumChartData: [
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        ], //[[], []] temp and humidity
+      },
+      '63dce0407578b047b7639f9b': {
+        chTempChartData: [
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        ], //[[], [], []] 3-channel temp data
+        chPowerChartData: [
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        ], //[[], [], [], [], []] 5-channel power (current * 220V) data
+        envTempHumChartData: [
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        ], //[[], []] temp and humidity
+      },
+      '63dcf0057578b047b76beb0e': {
+        chTempChartData: [
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        ], //[[], [], []] 3-channel temp data
+        chPowerChartData: [
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        ], //[[], [], [], [], []] 5-channel power (current * 220V) data
+        envTempHumChartData: [
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        ], //[[], []] temp and humidity
+      }
+    };
   }
 
   componentDidMount() {
     this.timerIDData = setInterval(
       () => this.tickDatetime(),
       1000
-    );
-    this.timerIDDatetime = setInterval(
-      () => this.tickData(),
-      5000
     );
   }
 
@@ -71,44 +279,185 @@ class MainView extends Component {
     clearInterval(this.timerIDDatetime);
   }
 
+  // Using this room data to update the charts
+  refreshChart(roomData) {
+    const devices = roomData.devices;
+
+    let leakCurrent = 0;
+    let totalCurrent = 0;
+    let status = 0;
+    let pm25 = 0;
+    let powerData = this.state.chPowerChartData;
+    let tempData = this.state.chTempChartData;
+
+    devices.forEach(device => {
+      if (device.devType === 'pm_sensor') {
+        pm25 = getSingleDataValueFloat(device.dataInfo);
+      }
+      if (device.devType === 'modbus_temp') {
+        let chTempValue = getSingleDataValueFloat(device.dataInfo);
+        if (chTempValue < -30) { // TODO: Modbus reason
+          chTempValue = 0;
+        }
+
+        const chTempName = getSingleDataName(device.dataInfo);
+        const pos = chTempName.lastIndexOf('_');
+        const chIndex = getChIndex(chTempName.substring(pos + 1));
+
+        if (chIndex > 0 && chIndex < tempData.length) {
+          const newTempData = [...tempData[chIndex]]; //Must use object copy instead assignment
+          newTempData.push(chTempValue);
+          if (newTempData.length > 24) {
+            newTempData.shift();
+          }
+          tempData[chIndex] = newTempData;
+        }
+      }
+      if (device.devType === 'refrg_temp_hum_sensor') {
+
+      }
+      if (device.devType === 'modbus_relay') {
+
+      }
+      if (device.devType === 'modbus_current') {
+        totalCurrent += getSingleDataValueFloat(device.dataInfo);
+      }
+      if (device.devType === 'modbus_error_ch') { //TODO: Record all errors for all channels
+        if (getSingleDataValueInt(device.dataInfo)) {
+          status = 1;
+        }
+      }
+      if (device.devType === 'modbus_leak_current') {
+        leakCurrent = getSingleDataValueFloat(device.dataInfo);
+      }
+    });
+
+    let newCurrentData = [...powerData[0]];
+    let newPowerData = [...powerData[1]];
+    newCurrentData.push(totalCurrent);
+    if (newCurrentData.length > 24) {
+      newCurrentData.shift();
+    }
+    newPowerData.push(totalCurrent * 220);
+    if (newPowerData.length > 24) {
+      newPowerData.shift();
+    }
+    powerData[0] = newCurrentData;
+    powerData[1] = newPowerData;
+
+    this.setState({
+      currentClassRoomName: roomData.name,
+      leakCurrent: leakCurrent,
+      chTempChartData: tempData,
+      chPowerChartData: powerData
+    });
+  }
+
+  // Update the data behind the current view, no need to deep-copy, just save data
+  refreshHistory(roomData) {
+    const devices = roomData.devices;
+
+    let totalCurrent = 0;
+    let tempData = this.historyChartsData[roomData._id].chTempChartData;
+    let powerData = this.historyChartsData[roomData._id].chPowerChartData;
+
+    devices.forEach(device => {
+      if (device.devType === 'modbus_temp') {
+        let chTempValue = getSingleDataValueFloat(device.dataInfo);
+        if (chTempValue < -30) { // TODO: Modbus reason
+          chTempValue = 0;
+        }
+
+        const chTempName = getSingleDataName(device.dataInfo);
+        const pos = chTempName.lastIndexOf('_');
+        const chIndex = getChIndex(chTempName.substring(pos + 1));
+
+        if (chIndex >= 0 && chIndex < tempData.length) {
+          console.log('Now update temp to ch: ', chIndex);
+          let newTempData = tempData[chIndex];
+          newTempData.push(chTempValue);
+          if (newTempData.length > 24) {
+            newTempData.shift();
+          }
+        }
+      }
+      if (device.devType === 'refrg_temp_hum_sensor') {
+      }
+      if (device.devType === 'modbus_current') {
+        totalCurrent += getSingleDataValueFloat(device.dataInfo);
+      }
+    });
+
+    let newCurrentData = powerData[0];
+    let newPowerData = powerData[1];
+    newCurrentData.push(totalCurrent);
+    if (newCurrentData.length > 24) {
+      newCurrentData.shift();
+    }
+    newPowerData.push(totalCurrent * 220);
+    if (newPowerData.length > 24) {
+      newPowerData.shift();
+    }
+  }
+
   tickDatetime() {
     this.setState({
       datetime: new Date()
     });
+    this.tickDataCount++;
+    this.tickRoomCount++;
+
+    if (this.tickRoomCount === 10) { //30 seconds
+      console.log('Time to switch to the next classroom...');
+      let newIndex = this.state.currentClassRoomIndex + 1;
+      if (newIndex === classRooms.length) {
+        newIndex = 0;
+      }
+      this.setState({
+        currentClassRoomIndex: newIndex,
+        chTempChartData: [...this.historyChartsData[classRooms[newIndex].id].chTempChartData],
+        chPowerChartData: [...this.historyChartsData[classRooms[newIndex].id].chPowerChartData],
+        envTempHumChartData: [...this.historyChartsData[classRooms[newIndex].id].envTempHumChartData]
+      });
+      this.tickRoomCount = 0;
+    }
+
+    if (this.tickDataCount === 5) {
+      console.log('Time to update charts...');
+      this.tickData();
+      this.tickDataCount = 0;
+    }
   }
 
   tickData() {
+    classRooms.forEach((room, index) => {
+      AxiosClient.get(`/v1/scenes/${room.id}`)
+        .then(res => {
+          let resData = res.data;
+          if (resData.state === 0) {
+            this.refreshHistory(resData.data);
+            if (index === this.state.currentClassRoomIndex) {
+              this.refreshChart(resData.data);
+            }
+          }
+          else {
+            console.log('Failed to get class room: ' + resData.message);
+          }
+        }).catch(err => {
+          console.log(err);
+        });
+    });
+
+    // Logs for relay on and off (TO be implemented)
     this.setState({
-      chTempChartData: [
-        [3, 4, 3, 4, 3, 4, 3, 6, 2, 4, 2, 4, 3, 4, 3, 4, 3, 4, 3, 6, 2, 4, 2, 4],
-        [5, 3, 5, 6, 1, 5, 3, 5, 6, 4, 6, 4, 8, 3, 5, 6, 1, 5, 3, 7, 2, 5, 1, 4],
-        [7, 1, 2, 4, 9, 5, 11, 8, 2, 9, 6, 4, 5, 3, 13, 6, 3, 4, 3, 6, 2, 6, 2, 6]
-      ],
-      chPowerChartData: [
-        [3, 4, 3, 4, 3, 4, 3, 6, 2, 4, 2, 4, 3, 4, 3, 4, 3, 4, 3, 6, 2, 4, 2, 4],
-        [3, 4, 7, 1, 3, 9, 10, 6, 5, 4, 8, 4, 2, 4, 3, 4, 9, 7, 5, 6, 3, 1, 10, 6],
-        [2, 5, 3, 4, 7, 4, 8, 11, 2, 3, 2, 4, 9, 4, 4, 4, 3, 8, 3, 2, 1, 7, 5, 2],
-        [1, 5, 3, 3, 3, 7, 3, 6, 2, 12, 2, 4, 9, 4, 3, 4, 6, 4, 3, 9, 2, 5, 2, 6],
-        [5, 3, 10, 4, 6, 4, 12, 6, 2, 7, 2, 4, 8, 4, 3, 5, 3, 4, 9, 6, 3, 4, 1, 8]
-      ],
-      leakCurrent: 5,
-      alarmLogChartData: {
-        leakCurrentCounts: 1,
-        overCurrentCounts: 2,
-        overTempCounts: 2
-      },
-      envTempHumChartData: [
-        [1, 4, 7, 2, 5, 4, 9, 12, 2, 4, 8, 4, 3, 5, 3, 4, 1, 4, 3, 5, 2, 9, 2, 4],
-        [3, 4, 3, 4, 3, 4, 3, 13, 2, 4, 1, 4, 3, 8, 3, 6, 3, 4, 3, 9, 2, 4, 7, 11]
-      ],
       uvLightLogChartData: [
-        {id: 0,  time: '2022-01-23 21:00:00', duration: 62 },
-        {id: 1,  time: '2022-01-23 21:00:00', duration: 63 },
-        {id: 2,  time: '2022-01-23 21:00:00', duration: 61 },
-        {id: 3,  time: '2022-01-23 21:00:00', duration: 61 },
-        {id: 4,  time: '2022-01-23 21:00:00', duration: 64 },
-        {id: 5,  time: '2022-01-23 21:00:00', duration: 63 },
-        {id: 6,  time: '2022-01-23 21:00:00', duration: 62 },
+        { id: 0, time: '2022-01-23 21:00:00', duration: 62 },
+        { id: 1, time: '2022-01-23 21:00:00', duration: 63 },
+        { id: 2, time: '2022-01-23 21:00:00', duration: 61 },
+        { id: 3, time: '2022-01-23 21:00:00', duration: 61 },
+        { id: 4, time: '2022-01-23 21:00:00', duration: 64 },
+        { id: 5, time: '2022-01-23 21:00:00', duration: 63 },
+        { id: 6, time: '2022-01-23 21:00:00', duration: 62 },
       ]
     });
   }
@@ -117,6 +466,8 @@ class MainView extends Component {
     const { datetime } = this.state;
     const timeStr = dateToTimeString(datetime);
     const dateStr = dateToDateString(datetime);
+
+    // console.log('Current temp state: ', this.state.chTempChartData);
 
     const chTempChartOption = {
       tooltip: {
@@ -452,66 +803,66 @@ class MainView extends Component {
         show: false
       },
       yAxis: [
-      {
-        show: true,
-        data: ['大一班'], //['大一班', '大二班', '大三班', '大四班']
-        inverse: true,
-        axisLine: {
-          show: false
-        },
-        splitLine: {
-          show: false
-        },
-        axisTick: {
-          show: false
-        },
-        axisLabel: {
-          color: '#fff',
-          formatter: (value, index) => {
-            return [
-              `{lg|${index + 1}}  ` + '{title|' + value + '} '
-            ].join('\n')
+        {
+          show: true,
+          data: ['大一班'], //['大一班', '大二班', '大三班', '大四班']
+          inverse: true,
+          axisLine: {
+            show: false
           },
-          rich: {
-            lg: {
-              backgroundColor: '#ff00ff',
-              color: '#fff',
-              borderRadius: 15,
-              // padding: 5,
-              align: 'center',
-              width: 18,
-              height: 18
-            },
-          }
-        },
-      },
-      {
-        show: true,
-        inverse: true,
-        data: [30], // [702, 406, 664, 793], per
-        axisLabel: {
-          textStyle: {
-            fontSize: 12,
+          splitLine: {
+            show: false
+          },
+          axisTick: {
+            show: false
+          },
+          axisLabel: {
             color: '#fff',
+            formatter: (value, index) => {
+              return [
+                `{lg|${index + 1}}  ` + '{title|' + value + '} '
+              ].join('\n')
+            },
+            rich: {
+              lg: {
+                backgroundColor: '#ff00ff',
+                color: '#fff',
+                borderRadius: 15,
+                // padding: 5,
+                align: 'center',
+                width: 18,
+                height: 18
+              },
+            }
           },
         },
-        axisLine: {
-          show: false
-        },
-        splitLine: {
-          show: false
-        },
-        axisTick: {
-          show: false
-        },
+        {
+          show: true,
+          inverse: true,
+          data: [30], // [702, 406, 664, 793], per
+          axisLabel: {
+            textStyle: {
+              fontSize: 12,
+              color: '#fff',
+            },
+          },
+          axisLine: {
+            show: false
+          },
+          splitLine: {
+            show: false
+          },
+          axisTick: {
+            show: false
+          },
 
-      }],
+        }],
       series: [
         {
           name: '条',
           type: 'bar',
           yAxisIndex: 0,
-          data: [((this.state.leakCurrent/30) * 100).toFixed(2)], //[70, 34, 60, 78] for each classroom, leak
+          data: [((this.state.leakCurrent / 30) * 100).toFixed(2)], //[70, 34, 60, 78] for each classroom, leak
           barWidth: 20,
           itemStyle: {
             normal: {
@@ -546,7 +897,7 @@ class MainView extends Component {
             }
           }
         }
-    ]
+      ]
     };
     const alarmLogChartOption = {
       color: ['#1affff', '#ffcc99', '#cc0066'],
@@ -619,7 +970,7 @@ class MainView extends Component {
             itemStyle: placeHolderStyle
           }]
         }
-        ]
+      ]
     };
     const envTempHumChartOption = {
       tooltip: {
@@ -791,7 +1142,7 @@ class MainView extends Component {
                 option={leakCurrentChartOption}
                 notMerge={true}
                 lazyUpdate={true}
-                style={{height: '100%'}}
+                style={{ height: '100%' }}
                 opts={{ renderer: 'svg' }}
               />
               <div className="boxfoot"></div>
@@ -801,8 +1152,8 @@ class MainView extends Component {
             <div className="bar">
               <div className="barbox">
                 <ul className="clearfix">
-                  <li className="pulll_left counter" style={{color: '#ffeb7b'}}>04</li>
-                  <li className="pulll_left counter" style={{color: '#ffeb7b'}}>大（一）班</li>
+                  <li className="pulll_left counter" style={{ color: '#ffeb7b' }}>04</li>
+                  <li className="pulll_left counter" style={{ color: '#ffeb7b' }}>{this.state.currentClassRoomName}</li>
                 </ul>
               </div>
               <div className="barbox2">
@@ -843,13 +1194,14 @@ class MainView extends Component {
             </div>
             <div className="boxall" style={{ height: "1.55rem" }}>
               <div className="alltitle">空气质量</div>
-              <div className='allnav' style={{paddingTop: '0.2rem'}}>
-                <div style={{ marginVertical: '4rem', height: '2.5rem'}}>
+              <div className='allnav' style={{ paddingTop: '0.2rem' }}>
+                <div style={{ marginVertical: '4rem', height: '2.5rem' }}>
                   <div style={{
                     color: 'white', backgroundColor: 'green', display: 'flex',
                     justifyContent: 'center', alignItems: 'center',
                     float: 'left', fontSize: '0.2rem',
-                    height: '0.35rem', width: '0.35rem', borderRadius: '50%' }}>{'优'}</div>
+                    height: '0.35rem', width: '0.35rem', borderRadius: '50%'
+                  }}>{'优'}</div>
                   <div className="data">
                     <p className="time">{timeStr}</p>
                     <p>{dateStr}</p>
@@ -881,8 +1233,8 @@ class MainView extends Component {
                     {
                       this.state.uvLightLogChartData.map((log, index) => {
                         return (
-                          <tr key={`uvLog-${log.id}`} className={ (index%2 === 1) ? 'table_odd_row' : ''  }>
-                            <td>{index+1}</td>
+                          <tr key={`uvLog-${log.id}`} className={(index % 2 === 1) ? 'table_odd_row' : ''}>
+                            <td>{index + 1}</td>
                             <td>{log.time}</td>
                             <td>{log.duration}</td>
                           </tr>
