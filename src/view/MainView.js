@@ -289,6 +289,7 @@ class MainView extends Component {
     let pm25 = 0;
     let powerData = this.state.chPowerChartData;
     let tempData = this.state.chTempChartData;
+    let envTempHumData = this.state.envTempHumChartData;
 
     devices.forEach(device => {
       if (device.devType === 'pm_sensor') {
@@ -313,8 +314,33 @@ class MainView extends Component {
           tempData[chIndex] = newTempData;
         }
       }
-      if (device.devType === 'refrg_temp_hum_sensor') {
+      if (device.devType === 'refrg_temp_hum_sensor' && device.devId === `RTH.${classRooms[this.state.currentClassRoomIndex].refrg}`) {
+        let envTemp = 0;
+        let envHum = 0;
+        const arTempHumValPairs = getMultDataValueFloat(device.dataInfo);
+        for (const pair of arTempHumValPairs) {
+          if (pair.name.indexOf('TEMP') > 0 && pair.value !== 0) {
+            envTemp = pair.value;
+          }
+          if (pair.name.indexOf('HUMI') > 0 && pair.value !== 0) {
+            envHum = pair.value;
+          }
+        }
 
+        console.log('New temp and hum value: ', envTemp, ', ', envHum);
+
+        const envTempData = [...envTempHumData[0]];
+        const envHumData = [...envTempHumData[1]];
+        envTempData.push(envTemp);
+        if (envTempData.length > 24) {
+          envTempData.shift();
+        }
+        envHumData.push(envHum);
+        if (envHumData.length > 24) {
+          envHumData.shift();
+        }
+        envTempHumData[0] = envTempData;
+        envTempHumData[1] = envHumData;
       }
       if (device.devType === 'modbus_relay') {
 
@@ -349,7 +375,8 @@ class MainView extends Component {
       currentClassRoomName: roomData.name,
       leakCurrent: leakCurrent,
       chTempChartData: tempData,
-      chPowerChartData: powerData
+      chPowerChartData: powerData,
+      envTempHumChartData: envTempHumData
     });
   }
 
@@ -360,6 +387,7 @@ class MainView extends Component {
     let totalCurrent = 0;
     let tempData = this.historyChartsData[roomData._id].chTempChartData;
     let powerData = this.historyChartsData[roomData._id].chPowerChartData;
+    let envTempHumData = this.historyChartsData[roomData._id].envTempHumChartData;
 
     devices.forEach(device => {
       if (device.devType === 'modbus_temp') {
@@ -373,7 +401,6 @@ class MainView extends Component {
         const chIndex = getChIndex(chTempName.substring(pos + 1));
 
         if (chIndex >= 0 && chIndex < tempData.length) {
-          console.log('Now update temp to ch: ', chIndex);
           let newTempData = tempData[chIndex];
           newTempData.push(chTempValue);
           if (newTempData.length > 24) {
@@ -382,6 +409,28 @@ class MainView extends Component {
         }
       }
       if (device.devType === 'refrg_temp_hum_sensor') {
+        let envTemp = 0;
+        let envHum = 0;
+        const arTempHumValPairs = getMultDataValueFloat(device.dataInfo);
+        for (const pair of arTempHumValPairs) {
+          if (pair.name.indexOf('TEMP') > 0 && pair.value !== 0) {
+            envTemp = pair.value;
+          }
+          if (pair.name.indexOf('HUMI') > 0 && pair.value !== 0) {
+            envHum = pair.value;
+          }
+        }
+
+        const envTempData = envTempHumData[0];
+        const envHumData = envTempHumData[1];
+        envTempData.push(envTemp);
+        if (envTempData.length > 24) {
+          envTempData.shift();
+        }
+        envHumData.push(envHum);
+        if (envHumData.length > 24) {
+          envHumData.shift();
+        }
       }
       if (device.devType === 'modbus_current') {
         totalCurrent += getSingleDataValueFloat(device.dataInfo);
@@ -407,7 +456,7 @@ class MainView extends Component {
     this.tickDataCount++;
     this.tickRoomCount++;
 
-    if (this.tickRoomCount === 15) { //30 seconds
+    if (this.tickRoomCount === 30) { //30 seconds
       console.log('Time to switch to the next classroom...');
       let newIndex = this.state.currentClassRoomIndex + 1;
       if (newIndex === classRooms.length) {
@@ -423,7 +472,6 @@ class MainView extends Component {
     }
 
     if (this.tickDataCount === 5) {
-      console.log('Time to update charts...');
       this.tickData();
       this.tickDataCount = 0;
     }
