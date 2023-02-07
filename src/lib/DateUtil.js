@@ -106,4 +106,6 @@ let dateAddDays = (date, days) => {
     return newDate;
 };
 
-export { dateToDateTimeString, dateToDateString, dateToTimeString, dateToDateWeekString, stringToDate, dateAddDays };
+export { dateToDateTimeString, dateToDateString,
+    dateToTimeString, dateToDateWeekString,
+    stringToDate, dateAddDays, numToPaddedText };

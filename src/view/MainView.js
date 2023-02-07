@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import AxiosClient from '../lib/AxiosClient';
-import { dateToTimeString, dateToDateString } from '../lib/DateUtil'
+import { dateToTimeString, dateToDateString, numToPaddedText } from '../lib/DateUtil'
 import axios from "axios";
 
 import lbx from '../picture/lbx.png'
@@ -1243,7 +1243,7 @@ class MainView extends Component {
             <div className="bar">
               <div className="barbox">
                 <ul className="clearfix">
-                  <li className="pulll_left counter" style={{ color: '#ffeb7b' }}>04</li>
+                  <li className="pulll_left counter" style={{ color: '#ffeb7b', paddingTop: '0.1rem' }}>{numToPaddedText(classRooms.length)}</li>
                   <li className="pulll_left counter" style={{ color: '#ffeb7b' }}>{this.state.currentClassRoomName}</li>
                 </ul>
               </div>
