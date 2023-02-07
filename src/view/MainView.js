@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import AxiosClient from '../lib/AxiosClient';
 import { dateToTimeString, dateToDateString } from '../lib/DateUtil'
+import axios from "axios";
 
 import lbx from '../picture/lbx.png'
 import jt from '../picture/jt.png'
@@ -35,7 +36,28 @@ const placeHolderStyle = {
 };
 
 const myColor = ['#33cc33', '#ff0000'];//['#1089E7', '#F57474', '#56D0E3', '#F8B448', '#8B78F6'];
+
 // TODO: configure this in a JSON file, using seaperate MESH
+/**
+ * [
+ *    {
+ *      organization: '龙城高级中学',
+ *      id: '234535de24235da678252ff',
+ *      scenes: [
+ *        {id: '63dcbd467578b047b751ce3a'},
+ *        ...
+ *      ]
+ *    },
+ *    {
+ *      organization: '深圳大学计算机系',
+ *      id: '234535de24fe5da678256c2ff',
+ *      scenes: [
+ *        {id: '63dcbd467578b047b751ce3a'},
+ *        ...
+ *      ]
+ *    }
+ * ]
+ */
 const classRooms = [
   { id: '63dcbd467578b047b751ce3a', pm: 237, refrg: 186, rm: [227, 229] }, //大一班
   { id: '63dcbd8c7578b047b751ef40', pm: 236, refrg: 187, rm: [223, 228] }, //大二班
@@ -194,7 +216,10 @@ class MainView extends Component {
       },
       datetime: new Date(),
       currentClassRoomIndex: 0,
-      currentClassRoomName: ''
+      currentClassRoomName: '',
+      
+      //Report from host heartbeat
+      sceneInfo: null//{ address: '深圳市，龙岗区，建新路，建新幼儿园', loc: [321.2221, 156.354], tel: '86-755-8432124' }
     };
     this.state = this.initialState;
     this.tickDatetime = this.tickDatetime.bind(this);
@@ -462,6 +487,24 @@ class MainView extends Component {
       if (newIndex === classRooms.length) {
         newIndex = 0;
       }
+
+      //Weather
+      const weatherApiOptions = {
+        method: 'GET',
+        url: 'https://api.seniverse.com/v3/weather/now.json',
+        params: {
+          key: 'SYQCesWE45OfyUwJH',
+          location: '22.736447:114.226381',
+          language: 'zh-Hans',
+          unit: 'c'
+        }
+      };
+      axios.request(weatherApiOptions).then(function (response) {
+        console.log('Weather data: ', response.data);
+      }).catch(function (error) {
+        console.error('Error while getting weather data: ', error);
+      });
+
       this.setState({
         currentClassRoomIndex: newIndex,
         chTempChartData: [...this.historyChartsData[classRooms[newIndex].id].chTempChartData],
