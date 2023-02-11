@@ -406,7 +406,7 @@ class MainView extends Component {
   }
 
   // Update the data behind the current view, no need to deep-copy, just save data
-  refreshHistory(roomData) {
+  refreshHistory(roomData, index) {
     const devices = roomData.devices;
 
     let totalCurrent = 0;
@@ -433,7 +433,7 @@ class MainView extends Component {
           }
         }
       }
-      if (device.devType === 'refrg_temp_hum_sensor') {
+      if (device.devType === 'refrg_temp_hum_sensor' && device.devId === `RTH.${classRooms[index].refrg}`) {
         let envTemp = 0;
         let envHum = 0;
         const arTempHumValPairs = getMultDataValueFloat(device.dataInfo);
@@ -526,7 +526,7 @@ class MainView extends Component {
         .then(res => {
           let resData = res.data;
           if (resData.state === 0) {
-            this.refreshHistory(resData.data);
+            this.refreshHistory(resData.data, index);
             if (index === this.state.currentClassRoomIndex) {
               this.refreshChart(resData.data);
             }
