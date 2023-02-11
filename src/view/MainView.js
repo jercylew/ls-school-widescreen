@@ -743,7 +743,7 @@ class MainView extends Component {
       },
       legend: {
         top: '0%',
-        data: ['总电流', '总电量'],
+        data: ['总电流'],
         textStyle: {
           color: 'rgba(255,255,255,.5)',
           fontSize: '12',
@@ -836,40 +836,6 @@ class MainView extends Component {
             }
           },
           data: this.state.chPowerChartData[0]
-        },
-        {
-          name: '总电量',
-          type: 'line',
-          smooth: true,
-          symbol: 'circle',
-          symbolSize: 5,
-          showSymbol: false,
-          lineStyle: {
-            normal: {
-              color: '#ffa31a',
-              width: 2
-            }
-          },
-          areaStyle: {
-            normal: {
-              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                offset: 0,
-                color: 'rgba(0, 216, 135, 0.4)'
-              }, {
-                offset: 0.8,
-                color: 'rgba(0, 216, 135, 0.1)'
-              }], false),
-              shadowColor: 'rgba(0, 0, 0, 0.1)',
-            }
-          },
-          itemStyle: {
-            normal: {
-              color: '#ffa31a',
-              borderColor: 'rgba(221, 220, 107, .1)',
-              borderWidth: 12
-            }
-          },
-          data: this.state.chPowerChartData[1]
         },
       ]
     };
