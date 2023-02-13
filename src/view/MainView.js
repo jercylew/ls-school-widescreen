@@ -356,6 +356,15 @@ class MainView extends Component {
 
         const envTempData = [...envTempHumData[0]];
         const envHumData = [...envTempHumData[1]];
+
+        //Ignore 0 value, simply use the latest one
+        if (Math.abs(envTemp) < 0.1) {
+          envTemp = envTempData[23];
+        }
+        if (Math.abs(envHum) < 0.1) {
+          envHum = envHumData[23];
+        }
+
         envTempData.push(envTemp);
         if (envTempData.length > 24) {
           envTempData.shift();
@@ -371,7 +380,7 @@ class MainView extends Component {
 
       }
       if (device.devType === 'modbus_current') {
-        totalCurrent += getSingleDataValueFloat(device.dataInfo);
+        totalCurrent += Math.abs(getSingleDataValueFloat(device.dataInfo));
       }
       if (device.devType === 'modbus_error_ch') { //TODO: Record all errors for all channels
         if (getSingleDataValueInt(device.dataInfo)) {
@@ -379,7 +388,7 @@ class MainView extends Component {
         }
       }
       if (device.devType === 'modbus_leak_current') {
-        leakCurrent = getSingleDataValueFloat(device.dataInfo);
+        leakCurrent = Math.abs(getSingleDataValueFloat(device.dataInfo));
       }
     });
 
@@ -448,6 +457,15 @@ class MainView extends Component {
 
         const envTempData = envTempHumData[0];
         const envHumData = envTempHumData[1];
+
+        //Ignore 0 value, simply use the latest one
+        if (Math.abs(envTemp) < 0.1) {
+          envTemp = envTempData[23];
+        }
+        if (Math.abs(envHum) < 0.1) {
+          envHum = envHumData[23];
+        }
+
         envTempData.push(envTemp);
         if (envTempData.length > 24) {
           envTempData.shift();
@@ -458,7 +476,7 @@ class MainView extends Component {
         }
       }
       if (device.devType === 'modbus_current') {
-        totalCurrent += getSingleDataValueFloat(device.dataInfo);
+        totalCurrent += Math.abs(getSingleDataValueFloat(device.dataInfo));
       }
     });
 
@@ -919,7 +937,7 @@ class MainView extends Component {
           name: '条',
           type: 'bar',
           yAxisIndex: 0,
-          data: [((this.state.leakCurrent / 30) * 100).toFixed(2)], //[70, 34, 60, 78] for each classroom, leak
+          data: [(((this.state.leakCurrent*1000) / 30) * 100).toFixed(2)], //[70, 34, 60, 78] for each classroom, leak
           barWidth: 20,
           itemStyle: {
             normal: {
@@ -1277,7 +1295,7 @@ class MainView extends Component {
             </div>
             <div className="boxall" style={{ height: "3.36rem" }}>
               <div className="alltitle">紫外灯消毒记录</div>
-              <div class="main_table t_btn3">
+              <div className="main_table t_btn3">
                 <table>
                   <thead>
                     <tr>
