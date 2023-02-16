@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import AxiosClient from '../lib/AxiosClient';
-import { dateToTimeString, dateToDateString, numToPaddedText } from '../lib/DateUtil'
+import { dateToTimeString, dateToDateString, numToPaddedText } from '../lib/DateUtil';
+import { getAirQuality, getWeatherImage } from '../lib/WeatherUtils';
 import axios from "axios";
 
 import lbx from '../picture/lbx.png'
 import jt from '../picture/jt.png'
-import map from '../images/layout-hgk-kindergarten.png'//'../picture/map.png'
-import weatherImg from '../images/weather_img01.png';
+import map from '../images/layout-hgk-kindergarten.png'
 
 import ReactECharts from 'echarts-for-react';
 import * as echarts from 'echarts/lib/echarts';
@@ -35,7 +35,7 @@ const placeHolderStyle = {
   }
 };
 
-const myColor = ['#33cc33', '#ff0000'];//['#1089E7', '#F57474', '#56D0E3', '#F8B448', '#8B78F6'];
+const myColor = ['#33cc33', '#ff0000'];
 
 // TODO: configure this in a JSON file, using seaperate MESH
 /**
@@ -217,6 +217,10 @@ class MainView extends Component {
       datetime: new Date(),
       currentClassRoomIndex: 0,
       currentClassRoomName: '',
+
+      weatherTemp: 0,
+      weatherQuality: '',
+      weatherType: '',
       
       //Report from host heartbeat
       sceneInfo: null//{ address: '深圳市，龙岗区，建新路，建新幼儿园', loc: [321.2221, 156.354], tel: '86-755-8432124' }
@@ -226,6 +230,7 @@ class MainView extends Component {
     this.tickData = this.tickData.bind(this);
     this.refreshChart = this.refreshChart.bind(this);
     this.refreshHistory = this.refreshHistory.bind(this);
+    this.tickWeather = this.tickWeather.bind(this);
     this.tickDataCount = 0;
     this.tickRoomCount = 0;
     this.historyChartsData = {
@@ -293,6 +298,8 @@ class MainView extends Component {
   }
 
   componentDidMount() {
+    this.tickData();
+    this.tickWeather();
     this.timerIDData = setInterval(
       () => this.tickDatetime(),
       1000
@@ -406,11 +413,8 @@ class MainView extends Component {
     powerData[1] = newPowerData;
 
     this.setState({
-      currentClassRoomName: roomData.name,
-      leakCurrent: leakCurrent,
-      chTempChartData: tempData,
-      chPowerChartData: powerData,
-      envTempHumChartData: envTempHumData
+      currentClassRoomName: roomData.name, leakCurrent: leakCurrent, chTempChartData: tempData,
+      chPowerChartData: powerData, envTempHumChartData: envTempHumData, weatherQuality: getAirQuality(pm25).text
     });
   }
 
@@ -506,23 +510,7 @@ class MainView extends Component {
         newIndex = 0;
       }
 
-      //Weather
-      const weatherApiOptions = {
-        method: 'GET',
-        url: 'https://api.seniverse.com/v3/weather/now.json',
-        params: {
-          key: 'SYQCesWE45OfyUwJH',
-          location: '22.736447:114.226381',
-          language: 'zh-Hans',
-          unit: 'c'
-        }
-      };
-      axios.request(weatherApiOptions).then(function (response) {
-        console.log('Weather data: ', response.data);
-      }).catch(function (error) {
-        console.error('Error while getting weather data: ', error);
-      });
-
+      this.tickWeather();
       this.setState({
         currentClassRoomIndex: newIndex,
         chTempChartData: [...this.historyChartsData[classRooms[newIndex].id].chTempChartData],
@@ -547,6 +535,7 @@ class MainView extends Component {
             this.refreshHistory(resData.data, index);
             if (index === this.state.currentClassRoomIndex) {
               this.refreshChart(resData.data);
+              //TODO: Update weather if not updated
             }
           }
           else {
@@ -568,6 +557,35 @@ class MainView extends Component {
         { id: 5, time: '2022-01-23 21:00:00', duration: 63 },
         { id: 6, time: '2022-01-23 21:00:00', duration: 62 },
       ]
+    });
+  }
+
+  tickWeather() {
+    const weatherApiOptions = {
+      method: 'GET',
+      url: 'https://api.seniverse.com/v3/weather/now.json',
+      params: {
+        key: 'SYQCesWE45OfyUwJH',
+        location: '22.736447:114.226381', //TODO: From host report
+        language: 'zh-Hans',
+        unit: 'c'
+      }
+    };
+    axios.request(weatherApiOptions).then(response => {
+      console.log('Weather data: ', response.data);
+      const weatherInfo = response.data;
+      if (weatherInfo.results && weatherInfo.results.length > 0) {
+        const result = weatherInfo.results[0];
+        const nowInfo = result.now;
+        // const location = result.location; //Not used so far
+
+        this.setState({
+          weatherTemp: nowInfo.temperature,
+          weatherType: nowInfo.text
+        });
+      }
+    }).catch(function (error) {
+      console.error('Error while getting weather data: ', error);
     });
   }
 
@@ -1274,16 +1292,16 @@ class MainView extends Component {
                     justifyContent: 'center', alignItems: 'center',
                     float: 'left', fontSize: '0.2rem',
                     height: '0.35rem', width: '0.35rem', borderRadius: '50%'
-                  }}>{'优'}</div>
+                  }}>{this.state.weatherQuality}</div>
                   <div className="data">
                     <p className="time">{timeStr}</p>
                     <p>{dateStr}</p>
                   </div>
                   <div className="weather">
-                    <img id="weatherImg" src={weatherImg} alt="" />
+                    <img id="weatherImg" src={getWeatherImage(this.state.weatherType)} alt="" />
                     <div id="weather">
-                      <p className="active">多云</p>
-                      <p>16-22℃</p>
+                      <p className="active">{this.state.weatherType}</p>
+                      <p>{`${this.state.weatherTemp} ℃`}</p>
                       <p>深圳市龙岗区</p>
                     </div>
                   </div>
