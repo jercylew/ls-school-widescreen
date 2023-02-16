@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import AxiosClient from '../lib/AxiosClient';
-import { dateToTimeString, dateToDateString, numToPaddedText } from '../lib/DateUtil';
+import { dateToTimeString, dateToDateString, numToPaddedText, dateToDateTimeString } from '../lib/DateUtil';
 import { getAirQuality, getWeatherImage } from '../lib/WeatherUtils';
 import axios from "axios";
 
@@ -63,6 +63,7 @@ const classRooms = [
   { id: '63dcbd8c7578b047b751ef40', pm: 236, refrg: 187, rm: [223, 228] }, //大二班
   { id: '63dce0407578b047b7639f9b', pm: 234, refrg: 188, rm: [222, 224] }, //大三班
   { id: '63dcf0057578b047b76beb0e', pm: 235, refrg: 189, rm: [225, 226] }, //大四班
+  // { id: '63d8aa420b0dad2f9cb0cb8d', pm: 0, refrg: 0, rm: [0, 0] },
 ];
 
 const getSingleDataName = dataInfoStr => {
@@ -221,7 +222,6 @@ class MainView extends Component {
       weatherTemp: 0,
       weatherQuality: '',
       weatherType: '',
-      
       //Report from host heartbeat
       sceneInfo: null//{ address: '深圳市，龙岗区，建新路，建新幼儿园', loc: [321.2221, 156.354], tel: '86-755-8432124' }
     };
@@ -293,7 +293,22 @@ class MainView extends Component {
           [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
           [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         ], //[[], []] temp and humidity
-      }
+      },
+      '63d8aa420b0dad2f9cb0cb8d': {
+        chTempChartData: [
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        ], //[[], [], []] 3-channel temp data
+        chPowerChartData: [
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        ], //[[], [], [], [], []] 5-channel power (current * 220V) data
+        envTempHumChartData: [
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        ], //[[], []] temp and humidity
+      },
     };
   }
 
@@ -412,9 +427,17 @@ class MainView extends Component {
     powerData[0] = newCurrentData;
     powerData[1] = newPowerData;
 
+    const rl = roomData.relayLogs.filter(l => l.relayId === 'modbus_relay_ttyS0_2_3' && l.ended);
     this.setState({
       currentClassRoomName: roomData.name, leakCurrent: leakCurrent, chTempChartData: tempData,
-      chPowerChartData: powerData, envTempHumChartData: envTempHumData, weatherQuality: getAirQuality(pm25).text
+      chPowerChartData: powerData, envTempHumChartData: envTempHumData, weatherQuality: getAirQuality(pm25).text,
+      uvLightLogChartData: rl.map((log, index) => {
+        return {
+          id: index,
+          startTime: dateToDateTimeString(log.startTime),
+          elapsed: log.elapsed.toFixed(2),
+        }
+      })
     });
   }
 
@@ -544,19 +567,6 @@ class MainView extends Component {
         }).catch(err => {
           console.log(err);
         });
-    });
-
-    // Logs for relay on and off (TO be implemented)
-    this.setState({
-      uvLightLogChartData: [
-        { id: 0, time: '2022-01-23 21:00:00', duration: 62 },
-        { id: 1, time: '2022-01-23 21:00:00', duration: 63 },
-        { id: 2, time: '2022-01-23 21:00:00', duration: 61 },
-        { id: 3, time: '2022-01-23 21:00:00', duration: 61 },
-        { id: 4, time: '2022-01-23 21:00:00', duration: 64 },
-        { id: 5, time: '2022-01-23 21:00:00', duration: 63 },
-        { id: 6, time: '2022-01-23 21:00:00', duration: 62 },
-      ]
     });
   }
 
@@ -1326,8 +1336,8 @@ class MainView extends Component {
                         return (
                           <tr key={`uvLog-${log.id}`} className={(index % 2 === 1) ? 'table_odd_row' : ''}>
                             <td>{index + 1}</td>
-                            <td>{log.time}</td>
-                            <td>{log.duration}</td>
+                            <td>{log.startTime}</td>
+                            <td>{log.elapsed}</td>
                           </tr>
                         );
                       })
