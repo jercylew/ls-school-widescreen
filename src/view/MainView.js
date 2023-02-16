@@ -221,6 +221,7 @@ class MainView extends Component {
 
       weatherTemp: 0,
       weatherQuality: '',
+      weatherQualityColor: '',
       weatherType: '',
       //Report from host heartbeat
       sceneInfo: null//{ address: '深圳市，龙岗区，建新路，建新幼儿园', loc: [321.2221, 156.354], tel: '86-755-8432124' }
@@ -431,6 +432,7 @@ class MainView extends Component {
     this.setState({
       currentClassRoomName: roomData.name, leakCurrent: leakCurrent, chTempChartData: tempData,
       chPowerChartData: powerData, envTempHumChartData: envTempHumData, weatherQuality: getAirQuality(pm25).text,
+      weatherQualityColor: getAirQuality(pm25).color,
       uvLightLogChartData: rl.map((log, index) => {
         return {
           id: index,
@@ -1298,7 +1300,7 @@ class MainView extends Component {
               <div className='allnav' style={{ paddingTop: '0.2rem' }}>
                 <div style={{ marginVertical: '4rem', height: '2.5rem' }}>
                   <div style={{
-                    color: 'white', backgroundColor: 'green', display: 'flex',
+                    color: 'white', backgroundColor: this.state.weatherQualityColor, display: 'flex',
                     justifyContent: 'center', alignItems: 'center',
                     float: 'left', fontSize: '0.2rem',
                     height: '0.35rem', width: '0.35rem', borderRadius: '50%'
