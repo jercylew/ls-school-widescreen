@@ -937,14 +937,12 @@ class MainView extends Component {
           name: '条',
           type: 'bar',
           yAxisIndex: 0,
-          data: [(((this.state.leakCurrent*1000) / 30) * 100).toFixed(2)], //[70, 34, 60, 78] for each classroom, leak
+          data: [(((this.state.leakCurrent) / 30) * 100).toFixed(2)], //[70, 34, 60, 78] for each classroom, leak
           barWidth: 20,
           itemStyle: {
             normal: {
               barBorderRadius: 20,
-              color: function (params) {
-                return myColor[0]; //this.state.leakCurrent < 15 && this.state.leakCurrent > 0 ? myColor[0] : myColor[1]
-              },
+              color: (this.state.leakCurrent < 15 && this.state.leakCurrent > 0) ? myColor[0] : myColor[1],
             }
           },
           label: {
