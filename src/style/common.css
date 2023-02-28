@@ -395,6 +395,95 @@ a:hover {
 	z-index: 1;
 }
 
+.alarmIconNormal1 {
+	top: 0.42rem;
+	left: 5rem;
+	height: 0.25rem;
+	width: 0.25rem;
+	border-radius: 50%;
+	background: rgba(255, 0, 0, .1);
+	position: absolute;
+	z-index: 1;
+}
+
+.alarmIconAbnormal1 {
+	top: 0.42rem;
+	left: 5rem;
+	height: 0.25rem;
+	width: 0.25rem;
+	border-radius: 50%;
+	background: rgba(255, 0, 0, .6);
+	position: absolute;
+	z-index: 1;
+}
+
+.alarmIconNormal2 {
+	top: 1.5rem;
+	left: 4.5rem;
+	height: 0.25rem;
+	width: 0.25rem;
+	border-radius: 50%;
+	background: rgba(255, 0, 0, .05);
+	position: absolute;
+	z-index: 1;
+}
+
+.alarmIconAbnormal2 {
+	top: 1.5rem;
+	left: 4.5rem;
+	height: 0.25rem;
+	width: 0.25rem;
+	border-radius: 50%;
+	background: rgba(255, 0, 0, .6);
+	position: absolute;
+	z-index: 1;
+}
+
+.alarmIconNormal3 {
+	top: 2.0rem;
+	left: 3.2rem;
+	height: 0.25rem;
+	width: 0.25rem;
+	border-radius: 50%;
+	background: rgba(255, 0, 0, .05);
+	position: absolute;
+	z-index: 1;
+}
+
+.alarmIconAbnormal3 {
+	top: 2.0rem;
+	left: 3.2rem;
+	height: 0.25rem;
+	width: 0.25rem;
+	border-radius: 50%;
+	background: rgba(255, 0, 0, .6);
+	position: absolute;
+	z-index: 1;
+}
+
+.alarmIconNormal4 {
+	top: 2.7rem;
+	left: 2rem;
+	height: 0.25rem;
+	width: 0.25rem;
+	border-radius: 50%;
+	background: rgba(255, 0, 0, .05);
+	position: absolute;
+	z-index: 1;
+}
+
+.alarmIconAbnormal4 {
+	top: 2.7rem;
+	left: 2rem;
+	height: 0.25rem;
+	width: 0.25rem;
+	border-radius: 50%;
+	background: rgba(255, 0, 0, .6);
+	position: absolute;
+	z-index: 1;
+}
+
+
 .tabs {
 	text-align: center;
 	padding: .1rem 0 0 0;

@@ -224,7 +224,8 @@ class MainView extends Component {
       weatherQualityColor: '',
       weatherType: '',
       //Report from host heartbeat
-      sceneInfo: null//{ address: '深圳市，龙岗区，建新路，建新幼儿园', loc: [321.2221, 156.354], tel: '86-755-8432124' }
+      sceneInfo: null,//{ address: '深圳市，龙岗区，建新路，建新幼儿园', loc: [321.2221, 156.354], tel: '86-755-8432124' }
+      alarmIconBlinkOn: false
     };
     this.state = this.initialState;
     this.tickDatetime = this.tickDatetime.bind(this);
@@ -320,11 +321,18 @@ class MainView extends Component {
       () => this.tickDatetime(),
       1000
     );
+
+    this.timerAlarmBlink = setInterval(() => {
+      const newBlinkOn = !this.state.alarmIconBlinkOn;
+      this.setState({
+        alarmIconBlinkOn: newBlinkOn
+      });
+    }, 500);
   }
 
   componentWillUnmount() {
     clearInterval(this.timerIDData);
-    clearInterval(this.timerIDDatetime);
+    clearInterval(this.timerAlarmBlink);
   }
 
   // Using this room data to update the charts
@@ -523,7 +531,7 @@ class MainView extends Component {
 
   tickDatetime() {
     this.setState({
-      datetime: new Date()
+      datetime: new Date(),
     });
     this.tickDataCount++;
     this.tickRoomCount++;
@@ -1270,6 +1278,10 @@ class MainView extends Component {
               <div className="map1"><img src={lbx} alt="lbx" /></div>
               <div className="map2"><img src={jt} alt="jt" /></div>
               <div className="map3"><img src={map} alt="map" /></div>
+              <div className={this.state.alarmIconBlinkOn ? 'alarmIconAbnormal1' : 'alarmIconNormal1'}></div>
+              <div className={this.state.alarmIconBlinkOn ? 'alarmIconAbnormal2' : 'alarmIconNormal2'}></div>
+              <div className={this.state.alarmIconBlinkOn ? 'alarmIconAbnormal3' : 'alarmIconNormal3'}></div>
+              <div className={this.state.alarmIconBlinkOn ? 'alarmIconAbnormal4' : 'alarmIconNormal4'}></div>
               {/* <div className="map4" id="map_1"></div> */}
             </div>
             <div className="boxall" style={{ height: "2.65rem" }}>
