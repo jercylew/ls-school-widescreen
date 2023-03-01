@@ -225,7 +225,8 @@ class MainView extends Component {
       weatherType: '',
       //Report from host heartbeat
       sceneInfo: null,//{ address: '深圳市，龙岗区，建新路，建新幼儿园', loc: [321.2221, 156.354], tel: '86-755-8432124' }
-      alarmIconBlinkOn: false
+      alarmIconBlinkOn: false,
+      classRoomStatus: classRooms.map((cr, index) => 0)
     };
     this.state = this.initialState;
     this.tickDatetime = this.tickDatetime.bind(this);
@@ -336,7 +337,7 @@ class MainView extends Component {
   }
 
   // Using this room data to update the charts
-  refreshChart(roomData) {
+  refreshChart(roomData, index) {
     const devices = roomData.devices;
 
     let leakCurrent = 0;
@@ -347,81 +348,106 @@ class MainView extends Component {
     let tempData = this.state.chTempChartData;
     let envTempHumData = this.state.envTempHumChartData;
 
-    devices.forEach(device => {
-      if (device.devType === 'pm_sensor') {
-        pm25 = getSingleDataValueFloat(device.dataInfo);
-      }
-      if (device.devType === 'modbus_temp') {
-        let chTempValue = getSingleDataValueFloat(device.dataInfo);
-        if (chTempValue < -30) { // TODO: Modbus reason
-          chTempValue = 0;
+    if (roomData.online) {
+      devices.forEach(device => {
+        if (device.devType === 'pm_sensor') {
+          pm25 = getSingleDataValueFloat(device.dataInfo);
         }
-
-        const chTempName = getSingleDataName(device.dataInfo);
-        const pos = chTempName.lastIndexOf('_');
-        const chIndex = getChIndex(chTempName.substring(pos + 1));
-
-        if (chIndex > 0 && chIndex < tempData.length) {
-          const newTempData = [...tempData[chIndex]]; //Must use object copy instead assignment
-          newTempData.push(chTempValue);
-          if (newTempData.length > 24) {
-            newTempData.shift();
+        if (device.devType === 'modbus_temp') {
+          let chTempValue = getSingleDataValueFloat(device.dataInfo);
+          if (chTempValue < -30) { // TODO: Modbus reason
+            chTempValue = 0;
           }
-          tempData[chIndex] = newTempData;
-        }
-      }
-      if (device.devType === 'refrg_temp_hum_sensor' && device.devId === `RTH.${classRooms[this.state.currentClassRoomIndex].refrg}`) {
-        let envTemp = 0;
-        let envHum = 0;
-        const arTempHumValPairs = getMultDataValueFloat(device.dataInfo);
-        for (const pair of arTempHumValPairs) {
-          if (pair.name.indexOf('TEMP') > 0 && pair.value !== 0) {
-            envTemp = pair.value;
-          }
-          if (pair.name.indexOf('HUMI') > 0 && pair.value !== 0) {
-            envHum = pair.value;
+
+          const chTempName = getSingleDataName(device.dataInfo);
+          const pos = chTempName.lastIndexOf('_');
+          const chIndex = getChIndex(chTempName.substring(pos + 1));
+
+          if (chIndex > 0 && chIndex < tempData.length) {
+            const newTempData = [...tempData[chIndex]]; //Must use object copy instead assignment
+            newTempData.push(chTempValue);
+            if (newTempData.length > 24) {
+              newTempData.shift();
+            }
+            tempData[chIndex] = newTempData;
           }
         }
+        if (device.devType === 'refrg_temp_hum_sensor' && device.devId === `RTH.${classRooms[this.state.currentClassRoomIndex].refrg}`) {
+          let envTemp = 0;
+          let envHum = 0;
+          const arTempHumValPairs = getMultDataValueFloat(device.dataInfo);
+          for (const pair of arTempHumValPairs) {
+            if (pair.name.indexOf('TEMP') > 0 && pair.value !== 0) {
+              envTemp = pair.value;
+            }
+            if (pair.name.indexOf('HUMI') > 0 && pair.value !== 0) {
+              envHum = pair.value;
+            }
+          }
 
-        console.log('New temp and hum value: ', envTemp, ', ', envHum);
+          console.log('New temp and hum value: ', envTemp, ', ', envHum);
 
-        const envTempData = [...envTempHumData[0]];
-        const envHumData = [...envTempHumData[1]];
+          const envTempData = [...envTempHumData[0]];
+          const envHumData = [...envTempHumData[1]];
 
-        //Ignore 0 value, simply use the latest one
-        if (Math.abs(envTemp) < 0.1) {
-          envTemp = envTempData[23];
-        }
-        if (Math.abs(envHum) < 0.1) {
-          envHum = envHumData[23];
-        }
+          //Ignore 0 value, simply use the latest one
+          if (Math.abs(envTemp) < 0.1) {
+            envTemp = envTempData[23];
+          }
+          if (Math.abs(envHum) < 0.1) {
+            envHum = envHumData[23];
+          }
 
-        envTempData.push(envTemp);
-        if (envTempData.length > 24) {
-          envTempData.shift();
+          envTempData.push(envTemp);
+          if (envTempData.length > 24) {
+            envTempData.shift();
+          }
+          envHumData.push(envHum);
+          if (envHumData.length > 24) {
+            envHumData.shift();
+          }
+          envTempHumData[0] = envTempData;
+          envTempHumData[1] = envHumData;
         }
-        envHumData.push(envHum);
-        if (envHumData.length > 24) {
-          envHumData.shift();
-        }
-        envTempHumData[0] = envTempData;
-        envTempHumData[1] = envHumData;
-      }
-      if (device.devType === 'modbus_relay') {
+        if (device.devType === 'modbus_relay') {
 
-      }
-      if (device.devType === 'modbus_current') {
-        totalCurrent += Math.abs(getSingleDataValueFloat(device.dataInfo));
-      }
-      if (device.devType === 'modbus_error_ch') { //TODO: Record all errors for all channels
-        if (getSingleDataValueInt(device.dataInfo)) {
-          status = 1;
         }
+        if (device.devType === 'modbus_current') {
+          totalCurrent += Math.abs(getSingleDataValueFloat(device.dataInfo));
+        }
+        if (device.devType === 'modbus_error_ch') { //TODO: Record all errors for all channels
+          if (getSingleDataValueInt(device.dataInfo)) {
+            status = 1;
+          }
+        }
+        if (device.devType === 'modbus_leak_current') {
+          leakCurrent = Math.abs(getSingleDataValueFloat(device.dataInfo));
+        }
+      });
+    }
+    else {
+      status = 2;
+
+      //env temp and env
+      for (let i = 0;i < envTempHumData.length;i++) {
+        const envTempHumValue = [...envTempHumData[i]];
+        envTempHumValue.push(0);
+        if (envTempHumValue.length > 24) {
+          envTempHumValue.shift();
+        }
+        envTempHumData[i] = envTempHumValue;
       }
-      if (device.devType === 'modbus_leak_current') {
-        leakCurrent = Math.abs(getSingleDataValueFloat(device.dataInfo));
+
+      //channel temp
+      for (let i = 0;i < tempData.length;i++) {
+        const newTempData = [...tempData[i]];
+        newTempData.push(0);
+        if (newTempData.length > 24) {
+          newTempData.shift();
+        }
+        tempData[i] = newTempData;
       }
-    });
+    }
 
     let newCurrentData = [...powerData[0]];
     let newPowerData = [...powerData[1]];
@@ -460,62 +486,92 @@ class MainView extends Component {
     let powerData = this.historyChartsData[roomData._id].chPowerChartData;
     let envTempHumData = this.historyChartsData[roomData._id].envTempHumChartData;
 
-    devices.forEach(device => {
-      if (device.devType === 'modbus_temp') {
-        let chTempValue = getSingleDataValueFloat(device.dataInfo);
-        if (chTempValue < -30) { // TODO: Modbus reason
-          chTempValue = 0;
-        }
+    let status = 0;
+    if (roomData.online) {
+      devices.forEach(device => {
+        if (device.devType === 'modbus_temp') {
+          let chTempValue = getSingleDataValueFloat(device.dataInfo);
+          if (chTempValue < -30) { // TODO: Modbus reason
+            chTempValue = 0;
+          }
 
-        const chTempName = getSingleDataName(device.dataInfo);
-        const pos = chTempName.lastIndexOf('_');
-        const chIndex = getChIndex(chTempName.substring(pos + 1));
+          const chTempName = getSingleDataName(device.dataInfo);
+          const pos = chTempName.lastIndexOf('_');
+          const chIndex = getChIndex(chTempName.substring(pos + 1));
 
-        if (chIndex >= 0 && chIndex < tempData.length) {
-          let newTempData = tempData[chIndex];
-          newTempData.push(chTempValue);
-          if (newTempData.length > 24) {
-            newTempData.shift();
+          if (chIndex >= 0 && chIndex < tempData.length) {
+            let newTempData = tempData[chIndex];
+            newTempData.push(chTempValue);
+            if (newTempData.length > 24) {
+              newTempData.shift();
+            }
           }
         }
-      }
-      if (device.devType === 'refrg_temp_hum_sensor' && device.devId === `RTH.${classRooms[index].refrg}`) {
-        let envTemp = 0;
-        let envHum = 0;
-        const arTempHumValPairs = getMultDataValueFloat(device.dataInfo);
-        for (const pair of arTempHumValPairs) {
-          if (pair.name.indexOf('TEMP') > 0 && pair.value !== 0) {
-            envTemp = pair.value;
+        if (device.devType === 'refrg_temp_hum_sensor' && device.devId === `RTH.${classRooms[index].refrg}`) {
+          let envTemp = 0;
+          let envHum = 0;
+          const arTempHumValPairs = getMultDataValueFloat(device.dataInfo);
+          for (const pair of arTempHumValPairs) {
+            if (pair.name.indexOf('TEMP') > 0 && pair.value !== 0) {
+              envTemp = pair.value;
+            }
+            if (pair.name.indexOf('HUMI') > 0 && pair.value !== 0) {
+              envHum = pair.value;
+            }
           }
-          if (pair.name.indexOf('HUMI') > 0 && pair.value !== 0) {
-            envHum = pair.value;
+
+          const envTempData = envTempHumData[0];
+          const envHumData = envTempHumData[1];
+
+          //Ignore 0 value, simply use the latest one
+          if (Math.abs(envTemp) < 0.1) {
+            envTemp = envTempData[23];
+          }
+          if (Math.abs(envHum) < 0.1) {
+            envHum = envHumData[23];
+          }
+
+          envTempData.push(envTemp);
+          if (envTempData.length > 24) {
+            envTempData.shift();
+          }
+          envHumData.push(envHum);
+          if (envHumData.length > 24) {
+            envHumData.shift();
           }
         }
-
-        const envTempData = envTempHumData[0];
-        const envHumData = envTempHumData[1];
-
-        //Ignore 0 value, simply use the latest one
-        if (Math.abs(envTemp) < 0.1) {
-          envTemp = envTempData[23];
+        if (device.devType === 'modbus_current') {
+          totalCurrent += Math.abs(getSingleDataValueFloat(device.dataInfo));
         }
-        if (Math.abs(envHum) < 0.1) {
-          envHum = envHumData[23];
+        if (device.devType === 'modbus_error_ch') { //TODO: Record all errors for all channels
+          if (getSingleDataValueInt(device.dataInfo)) {
+            status = 1;
+          }
         }
-
-        envTempData.push(envTemp);
-        if (envTempData.length > 24) {
-          envTempData.shift();
+      });
+    }
+    else {
+      status = 2;
+      //env temp and env
+      for (let i = 0;i < envTempHumData.length;i++) {
+        const envTempHumValue = [...envTempHumData[i]];
+        envTempHumValue.push(0);
+        if (envTempHumValue.length > 24) {
+          envTempHumValue.shift();
         }
-        envHumData.push(envHum);
-        if (envHumData.length > 24) {
-          envHumData.shift();
-        }
+        envTempHumData[i] = envTempHumValue;
       }
-      if (device.devType === 'modbus_current') {
-        totalCurrent += Math.abs(getSingleDataValueFloat(device.dataInfo));
+
+      //channel temp
+      for (let i = 0;i < tempData.length;i++) {
+        const newTempData = [...tempData[i]];
+        newTempData.push(0);
+        if (newTempData.length > 24) {
+          newTempData.shift();
+        }
+        tempData[i] = newTempData;
       }
-    });
+    }
 
     let newCurrentData = powerData[0];
     let newPowerData = powerData[1];
@@ -527,6 +583,12 @@ class MainView extends Component {
     if (newPowerData.length > 24) {
       newPowerData.shift();
     }
+
+    let updatedStatus = [...this.state.classRoomStatus];
+    updatedStatus[index] = status;
+    this.setState({
+      classRoomStatus: updatedStatus
+    })
   }
 
   tickDatetime() {
@@ -567,7 +629,7 @@ class MainView extends Component {
           if (resData.state === 0) {
             this.refreshHistory(resData.data, index);
             if (index === this.state.currentClassRoomIndex) {
-              this.refreshChart(resData.data);
+              this.refreshChart(resData.data, index);
               //TODO: Update weather if not updated
             }
           }
@@ -1278,10 +1340,18 @@ class MainView extends Component {
               <div className="map1"><img src={lbx} alt="lbx" /></div>
               <div className="map2"><img src={jt} alt="jt" /></div>
               <div className="map3"><img src={map} alt="map" /></div>
-              <div className={this.state.alarmIconBlinkOn ? 'alarmIconAbnormal1' : 'alarmIconNormal1'}></div>
-              <div className={this.state.alarmIconBlinkOn ? 'alarmIconAbnormal2' : 'alarmIconNormal2'}></div>
-              <div className={this.state.alarmIconBlinkOn ? 'alarmIconAbnormal3' : 'alarmIconNormal3'}></div>
-              <div className={this.state.alarmIconBlinkOn ? 'alarmIconAbnormal4' : 'alarmIconNormal4'}></div>
+              {
+                classRooms.map((cr, index) => {
+                  if (this.state.classRoomStatus[index] !== 0) {
+                    return (
+                      <div className={this.state.alarmIconBlinkOn ? `alarmIconAbnormal${index + 1}` : `alarmIconNormal${index + 1}`}></div>
+                    )
+                  }
+                  else {
+                    return null;
+                  }
+                })
+              }
               {/* <div className="map4" id="map_1"></div> */}
             </div>
             <div className="boxall" style={{ height: "2.65rem" }}>
