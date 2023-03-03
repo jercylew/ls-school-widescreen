@@ -462,7 +462,7 @@ class MainView extends Component {
     powerData[0] = newCurrentData;
     powerData[1] = newPowerData;
 
-    const rl = roomData.relayLogs.filter(l => l.relayId === 'modbus_relay_ttyS0_2_3' && l.ended);
+    const rl = roomData.relayLogs.filter(l => l.relayId === 'modbus_relay_ttyS0_2_3' && l.ended).reverse();
     this.setState({
       currentClassRoomName: roomData.name, leakCurrent: leakCurrent, chTempChartData: tempData,
       chPowerChartData: powerData, envTempHumChartData: envTempHumData, weatherQuality: getAirQuality(pm25).text,
@@ -1282,7 +1282,6 @@ class MainView extends Component {
         },
       ]
     };
-    const reversedUVLightLogs = this.state.uvLightLogChartData.reverse();
 
     return (
       <div className="mainbox">
@@ -1417,7 +1416,7 @@ class MainView extends Component {
                   </thead>
                   <tbody>
                     {
-                      reversedUVLightLogs.slice(0, 7).map((log, index) => {
+                      this.state.uvLightLogChartData.slice(0, 7).map((log, index) => {
                         return (
                           <tr key={`uvLog-${log.id}`} className={(index % 2 === 1) ? 'table_odd_row' : ''}>
                             <td>{index + 1}</td>
