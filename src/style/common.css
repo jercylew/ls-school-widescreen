@@ -902,7 +902,7 @@ a:hover {
 .main_table th:nth-child(2){
     width: 35%;
 }
-.main_table th:nth-child(2){
+.main_table th:nth-child(3){
     width: 35%;
 }
 .main_table td{
@@ -914,6 +914,39 @@ a:hover {
 	background-color: #072951;
     box-shadow:-10px 0px 15px #034c6a inset,
     10px 0px 15px #034c6a inset;
+}
+
+.mini_table tr{
+    height: .18rem;
+}
+.mini_table{
+    width: 100%;
+}
+.mini_table table{
+    width: 100%;
+}
+.mini_table thead tr{
+    height: 42px;
+}
+.mini_table th{
+    font-size: 14px;
+    font-weight: 600;
+    color:#61d2f7;
+    text-align: center;
+}
+.mini_table th:nth-child(1){
+    width: 10%;
+}
+.mini_table th:nth-child(2){
+    width: 20%;
+}
+.mini_table th:nth-child(3){
+    width: 70%;
+}
+.mini_table td{
+    color:#fff;
+    font-size: 12.8px;
+    text-align: center;
 }
 
   

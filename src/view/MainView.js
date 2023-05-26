@@ -7,6 +7,7 @@ import axios from "axios";
 import lbx from '../picture/lbx.png'
 import jt from '../picture/jt.png'
 import map from '../images/layout-hgk-kindergarten.png'
+import camera_icon from '../images/camera.png'
 
 import ReactECharts from 'echarts-for-react';
 import * as echarts from 'echarts/lib/echarts';
@@ -36,6 +37,7 @@ const placeHolderStyle = {
 };
 
 const myColor = ['#33cc33', '#ff0000'];
+const nNumOfCamerasInView = 4;
 
 // TODO: configure this in a JSON file, using seaperate MESH
 /**
@@ -208,6 +210,8 @@ class MainView extends Component {
       ], //[[], []] temp and humidity
 
       uvLightLogChartData: [], //[{datetime, duration}]
+      camerasStatusData: [], //[{id, chaName, online}]
+      cameraViewScrollIndex: 0,
       chError: [], // [{ch: 0, err: false, type: null}, {ch: 1, err: true, type: 'over_current'}], type = 'over_current|over_temp|leak_current'
       leakCurrent: 0,
       alarmLogChartData: {
@@ -329,11 +333,17 @@ class MainView extends Component {
         alarmIconBlinkOn: newBlinkOn
       });
     }, 500);
+
+    this.timerCameraStatusViewScroll = setInterval(
+      () => this.tickCameraViewScrollIndex(),
+      3000
+    );
   }
 
   componentWillUnmount() {
     clearInterval(this.timerIDData);
     clearInterval(this.timerAlarmBlink);
+    clearInterval(this.timerCameraStatusViewScroll);
   }
 
   // Using this room data to update the charts
@@ -473,7 +483,18 @@ class MainView extends Component {
           startTime: dateToDateTimeString(log.startTime),
           elapsed: log.elapsed.toFixed(2),
         }
-      })
+      }),
+      camerasStatusData: [
+        { id: 0, name: '大一班教室', online: true },
+        { id: 1, name: '大一班卫生间', online: true },
+        { id: 2, name: '大一班午休室', online: false },
+        { id: 3, name: '中一班教室', online: true },
+        { id: 4, name: '中一班门口', online: false },
+        { id: 5, name: '中一班午休室', online: true },
+        { id: 6, name: '中一班回画室', online: true },
+        { id: 7, name: '小三班教室', online: false },
+        { id: 8, name: '小一班教室', online: true },
+      ]
     });
   }
 
@@ -668,6 +689,16 @@ class MainView extends Component {
       }
     }).catch(function (error) {
       console.error('Error while getting weather data: ', error);
+    });
+  }
+
+  tickCameraViewScrollIndex() {
+    let newIndex = this.state.cameraViewScrollIndex + 1;
+    if (newIndex + nNumOfCamerasInView >= this.state.camerasStatusData.length) {
+      newIndex = 0;
+    }
+    this.setState({
+      cameraViewScrollIndex: newIndex
     });
   }
 
@@ -1287,24 +1318,24 @@ class MainView extends Component {
       <div className="mainbox">
         <ul className="clearfix">
           <li>
-            <div className="boxall" style={{ height: "3.2rem" }}>
+            <div className="boxall" style={{ height: "2.3rem" }}>
               <div className="alltitle">线路温度</div>
               <ReactECharts
                 option={chTempChartOption}
                 notMerge={true}
                 lazyUpdate={true}
-                className="allnav"
+                style={{ height: '100%' }}
                 opts={{ renderer: 'svg' }}
               />
               <div className="boxfoot"></div>
             </div>
-            <div className="boxall" style={{ height: "3.2rem" }}>
+            <div className="boxall" style={{ height: "2.3rem" }}>
               <div className="alltitle">实时用电量</div>
               <ReactECharts
                 option={chPowerChartOption}
                 notMerge={true}
                 lazyUpdate={true}
-                className="allnav"
+                style={{ height: '100%' }}
                 opts={{ renderer: 'svg' }}
               />
               <div className="boxfoot"></div>
@@ -1318,6 +1349,37 @@ class MainView extends Component {
                 style={{ height: '100%' }}
                 opts={{ renderer: 'svg' }}
               />
+              <div className="boxfoot"></div>
+            </div>
+            <div className="boxall" style={{ height: "1.8rem" }}>
+              <div className="alltitle">视频监控</div>
+              <div className="mini_table">
+                <table>
+                  {/* <thead>
+                    <tr>
+                      <th>序号</th>
+                      <th>时间</th>
+                      <th>持续时间</th>
+                    </tr>
+                  </thead> */}
+                  <tbody>
+                    {
+                      this.state.camerasStatusData.slice(this.state.cameraViewScrollIndex,
+                        this.state.cameraViewScrollIndex + nNumOfCamerasInView).map((camera, index) => {
+                          return (
+                            <tr key={`camera-${camera.id}`}>
+                              <td style={{ width: '10%' }}><img src={camera_icon} alt="camera icon" height='25rem' width={'35rem'} /></td>
+                              <td style={{ width: '20%', textAlign: 'left' }}>{camera.name}</td>
+                              <td style={{ width: '70%', textAlign: 'center', color: camera.online ? 'green' : 'red' }}>
+                                {camera.online ? '在线' : '离线'}
+                              </td>
+                            </tr>
+                          );
+                        })
+                    }
+                  </tbody>
+                </table>
+              </div>
               <div className="boxfoot"></div>
             </div>
           </li>
@@ -1344,7 +1406,8 @@ class MainView extends Component {
                 classRooms.map((cr, index) => {
                   if (this.state.classRoomStatus[index] !== 0) {
                     return (
-                      <div className={this.state.alarmIconBlinkOn ? `alarmIconAbnormal${index + 1}` : `alarmIconNormal${index + 1}`}></div>
+                      <div key={`alarmIcon-${cr.id}`}
+                      className={this.state.alarmIconBlinkOn ? `alarmIconAbnormal${index + 1}` : `alarmIconNormal${index + 1}`}></div>
                     )
                   }
                   else {
@@ -1405,7 +1468,7 @@ class MainView extends Component {
             </div>
             <div className="boxall" style={{ height: "3.36rem" }}>
               <div className="alltitle">紫外灯消毒记录</div>
-              <div className="main_table t_btn3">
+              <div className="main_table">
                 <table>
                   <thead>
                     <tr>
