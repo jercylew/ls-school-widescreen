@@ -12,6 +12,8 @@ import camera_icon from '../images/camera.png'
 import ReactECharts from 'echarts-for-react';
 import * as echarts from 'echarts/lib/echarts';
 
+import $ from 'jquery';
+
 const dataStyle = {
   normal: {
     label: {
@@ -700,6 +702,13 @@ class MainView extends Component {
     this.setState({
       cameraViewScrollIndex: newIndex
     });
+
+    $(".message_scroll_box").animate({ marginTop: 86 }, 800,
+      function () {
+        $(".message_scroll_box").css({ marginTop: 0 });
+        // Insert the last message on the top of the list
+        $(".message_scroll_box .message_scroll:first").before($(".message_scroll_box .message_scroll:last"));
+      });
   }
 
   render() {
@@ -1447,7 +1456,7 @@ class MainView extends Component {
                   </div>
                   <div class="message_scroll">
                     <div class="scroll_top">
-                      <span class="scroll_title">数据流量警示</span>
+                      <span class="scroll_title">数据流量警示2</span>
                       <span class="scroll_level scroll_level03">三级</span>
                       <a class="localize"></a>
                       <span class="scroll_timer">17-09-13/9:52</span>
@@ -1461,8 +1470,8 @@ class MainView extends Component {
                   </div>
                   <div class="message_scroll">
                     <div class="scroll_top">
-                      <span class="scroll_title">数据流量警示</span>
-                      <span class="scroll_level scroll_level02">二级</span>
+                      <span class="scroll_title">数据流量警示3</span>
+                      <span class="scroll_level scroll_level02">四级</span>
                       <a class="localize"></a>
                       <span class="scroll_timer">17-09-13/9:52</span>
                     </div>
@@ -1475,8 +1484,8 @@ class MainView extends Component {
                   </div>
                   <div class="message_scroll">
                     <div class="scroll_top">
-                      <span class="scroll_title">数据流量警示</span>
-                      <span class="scroll_level scroll_level01">一级</span>
+                      <span class="scroll_title">数据流量警示4</span>
+                      <span class="scroll_level scroll_level01">五级</span>
                       <a class="localize"></a>
                       <span class="scroll_timer">17-09-13/9:52</span>
                     </div>
