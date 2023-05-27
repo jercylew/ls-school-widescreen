@@ -1417,15 +1417,78 @@ class MainView extends Component {
               }
               {/* <div className="map4" id="map_1"></div> */}
             </div>
-            <div className="boxall" style={{ height: "2.65rem" }}>
-              <div className="alltitle">报警记录</div>
-              <ReactECharts
-                option={alarmLogChartOption}
-                notMerge={true}
-                lazyUpdate={true}
-                opts={{ renderer: 'svg' }}
-              />
-              <div className="boxfoot"></div>
+            <div className="boxall" style={{ height: "2.65rem", display: 'flex',
+            flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' }}>
+              <div style={{ width: '100%', height: '100%'}}>
+                <div className="alltitle">线路报警</div>
+                <ReactECharts
+                  option={alarmLogChartOption}
+                  notMerge={true}
+                  lazyUpdate={true}
+                  opts={{ renderer: 'svg' }}
+                />
+              </div>
+              <div style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
+                <div className="alltitle">消防报警</div>
+                <div class="message_scroll_box" style={{marginTop: '5px'}}>
+                  <div class="message_scroll">
+                    <div class="scroll_top">
+                      <span class="scroll_title">数据流量警示</span>
+                      <span class="scroll_level scroll_level01">一级</span>
+                      <a class="localize" href='/#'>{``}</a>
+                      <span class="scroll_timer">17-09-13/9:52</span>
+                    </div>
+                    <div class="msg_cage">
+                      <a class="localize_title" href='/#'>下载大量视频</a>
+                    </div>
+                    <div class="msg_cage">
+                      <a class="localize_msg" href='/#'>xxx视频网站</a>
+                    </div>
+                  </div>
+                  <div class="message_scroll">
+                    <div class="scroll_top">
+                      <span class="scroll_title">数据流量警示</span>
+                      <span class="scroll_level scroll_level03">三级</span>
+                      <a class="localize"></a>
+                      <span class="scroll_timer">17-09-13/9:52</span>
+                    </div>
+                    <div class="msg_cage">
+                      <a class="localize_title">下载大量视频</a>
+                    </div>
+                    <div class="msg_cage">
+                      <a class="localize_msg">xxx视频网站</a>
+                    </div>
+                  </div>
+                  <div class="message_scroll">
+                    <div class="scroll_top">
+                      <span class="scroll_title">数据流量警示</span>
+                      <span class="scroll_level scroll_level02">二级</span>
+                      <a class="localize"></a>
+                      <span class="scroll_timer">17-09-13/9:52</span>
+                    </div>
+                    <div class="msg_cage">
+                      <a class="localize_title">下载大量视频</a>
+                    </div>
+                    <div class="msg_cage">
+                      <a class="localize_msg">xxx视频网站</a>
+                    </div>
+                  </div>
+                  <div class="message_scroll">
+                    <div class="scroll_top">
+                      <span class="scroll_title">数据流量警示</span>
+                      <span class="scroll_level scroll_level01">一级</span>
+                      <a class="localize"></a>
+                      <span class="scroll_timer">17-09-13/9:52</span>
+                    </div>
+                    <div class="msg_cage">
+                      <a class="localize_title">下载大量视频</a>
+                    </div>
+                    <div class="msg_cage">
+                      <a class="localize_msg">xxx视频网站</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </li>
           <li>
