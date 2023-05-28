@@ -1028,6 +1028,54 @@ a:hover {
     color: white;
 }
 
+// Fire control water level, pressure, etc
+.windBox{
+    width: 100%;
+    height: 80%;
+    color: #ACA5A1;
+}
+.windBox>div{
+    margin-top: 2%;
+    height: 98%;
+    float: left;
+}
+.windBox div p{
+    font-size: 12px;
+    margin: 5px 0;
+}
+/* .windWrap{
+    width: 76%;
+    height: 80%;
+    margin: 20% 12%;
+    background: url("../img/wind0.png") no-repeat;
+    background-size: 100%;
+    overflow: hidden;
+} */
+.windFan{
+    width: 60%;
+    margin: 20%;
+}
+.currentSpeed,.highestSpeed{
+    font-family: numfont;
+    color: #B0CC35;
+    font-size: 30px;
+}
+
+.windSpeed .windFan{
+    animation: speed 600ms linear infinite;
+}
+.gust .windFan{
+    animation: speed 400ms linear infinite;
+}
+@keyframes speed {
+    0% {
+        transform:rotate(0deg);
+    }
+    100% {
+        transform:rotate(360deg);
+    }
+}
+
   
   
 

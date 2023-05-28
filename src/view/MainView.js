@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import AxiosClient from '../lib/AxiosClient';
 import { dateToTimeString, dateToDateString, numToPaddedText, dateToDateTimeString } from '../lib/DateUtil';
 import { getAirQuality, getWeatherImage } from '../lib/WeatherUtils';
+import { creatBall } from '../lib/WaterBall';
 import axios from "axios";
 
 import lbx from '../picture/lbx.png'
@@ -217,9 +218,9 @@ class MainView extends Component {
       chError: [], // [{ch: 0, err: false, type: null}, {ch: 1, err: true, type: 'over_current'}], type = 'over_current|over_temp|leak_current'
       leakCurrent: 0,
       alarmLogChartData: {
-        leakCurrentCounts: 0,
-        overCurrentCounts: 0,
-        overTempCounts: 0
+        leakCurrentCounts: 21,   // For test
+        overCurrentCounts: 10,   // For test
+        overTempCounts: 13       // For test
       },
       datetime: new Date(),
       currentClassRoomIndex: 0,
@@ -340,6 +341,8 @@ class MainView extends Component {
       () => this.tickCameraViewScrollIndex(),
       3000
     );
+
+    creatBall('rainfallOne', 60);
   }
 
   componentWillUnmount() {
@@ -703,7 +706,7 @@ class MainView extends Component {
       cameraViewScrollIndex: newIndex
     });
 
-    $(".message_scroll_box").animate({ marginTop: 86 }, 800,
+    $(".message_scroll_box").animate({ marginTop: 72 }, 800,
       function () {
         $(".message_scroll_box").css({ marginTop: 0 });
         // Insert the last message on the top of the list
@@ -1426,7 +1429,7 @@ class MainView extends Component {
               }
               {/* <div className="map4" id="map_1"></div> */}
             </div>
-            <div className="boxall" style={{ height: "2.65rem", display: 'flex',
+            <div className="boxall" style={{ height: "2.83rem", display: 'flex', paddingBottom: '0.15rem',
             flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' }}>
               <div style={{ width: '100%', height: '100%'}}>
                 <div className="alltitle">线路报警</div>
@@ -1434,55 +1437,56 @@ class MainView extends Component {
                   option={alarmLogChartOption}
                   notMerge={true}
                   lazyUpdate={true}
+                  style={{ height: '100%' }}
                   opts={{ renderer: 'svg' }}
                 />
               </div>
               <div style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
                 <div className="alltitle">消防报警</div>
-                <div class="message_scroll_box" style={{marginTop: '5px'}}>
-                  <div class="message_scroll">
+                <div className="message_scroll_box" style={{marginTop: '5px'}}>
+                  <div className="message_scroll">
                     <div class="scroll_top">
-                      <span class="scroll_title">数据流量警示</span>
+                      <span class="scroll_title">打印机故障</span>
                       <span class="scroll_level scroll_level01">一级</span>
                       <a class="localize" href='/#'>{``}</a>
                       <span class="scroll_timer">17-09-13/9:52</span>
                     </div>
                     <div class="msg_cage">
-                      <a class="localize_title" href='/#'>下载大量视频</a>
+                      <a class="localize_title" href='/#'>一号主机</a>
                     </div>
                     <div class="msg_cage">
-                      <a class="localize_msg" href='/#'>xxx视频网站</a>
+                      <a class="localize_msg" href='/#'>一栋一区23楼</a>
                     </div>
                   </div>
-                  <div class="message_scroll">
+                  <div className="message_scroll">
                     <div class="scroll_top">
-                      <span class="scroll_title">数据流量警示2</span>
+                      <span class="scroll_title">回路断路</span>
                       <span class="scroll_level scroll_level03">三级</span>
                       <a class="localize"></a>
                       <span class="scroll_timer">17-09-13/9:52</span>
                     </div>
                     <div class="msg_cage">
-                      <a class="localize_title">下载大量视频</a>
+                      <a class="localize_title">二号主机</a>
                     </div>
                     <div class="msg_cage">
-                      <a class="localize_msg">xxx视频网站</a>
+                      <a class="localize_msg">一栋二区5楼</a>
                     </div>
                   </div>
-                  <div class="message_scroll">
+                  <div className="message_scroll">
                     <div class="scroll_top">
-                      <span class="scroll_title">数据流量警示3</span>
+                      <span class="scroll_title">电源断路</span>
                       <span class="scroll_level scroll_level02">四级</span>
                       <a class="localize"></a>
                       <span class="scroll_timer">17-09-13/9:52</span>
                     </div>
                     <div class="msg_cage">
-                      <a class="localize_title">下载大量视频</a>
+                      <a class="localize_title">主电箱</a>
                     </div>
                     <div class="msg_cage">
-                      <a class="localize_msg">xxx视频网站</a>
+                      <a class="localize_msg">行政办公楼203室</a>
                     </div>
                   </div>
-                  <div class="message_scroll">
+                  <div className="message_scroll">
                     <div class="scroll_top">
                       <span class="scroll_title">数据流量警示4</span>
                       <span class="scroll_level scroll_level01">五级</span>
@@ -1493,23 +1497,43 @@ class MainView extends Component {
                       <a class="localize_title">下载大量视频</a>
                     </div>
                     <div class="msg_cage">
-                      <a class="localize_msg">xxx视频网站</a>
+                      <a class="localize_msg">教研楼4楼401室</a>
                     </div>
                   </div>
                 </div>
               </div>
+              <div className="boxfoot"></div>
             </div>
           </li>
           <li>
-            <div className="boxall" style={{ height: "3.2rem" }}>
+            <div className="boxall" style={{ height: "1.6rem" }}>
               <div className="alltitle">环境温湿度</div>
               <ReactECharts
                 option={envTempHumChartOption}
                 notMerge={true}
                 lazyUpdate={true}
-                className="allnav"
+                style={{ height: '100%' }}
                 opts={{ renderer: 'svg' }}
               />
+              <div className="boxfoot"></div>
+            </div>
+            <div className="boxall" style={{ height: "1.55rem" }}>
+              <div className="alltitle">消防给水</div>
+              <div className="windBox">
+                <div style={{ width: '33%', marginLeft: '4%' }}>
+                  <p style={{ color: '#FFFFFF' }}>水池水位</p>
+                  <p style={{ color: '#FFFFFF' }}><span className="currentSpeed" id="nowDay">23</span>{` 厘米`}</p>
+                </div>
+                <div style={{ width: '31%', marginLeft: '2%' }}>
+                  <p style={{ color: '#FFFFFF' }}>喷淋水压</p>
+                  <p style={{ color: '#FFFFFF' }}><span className="highestSpeed" id="highDay">46</span>{` 千帕`}</p>
+                </div>
+                <div style={{width: '30%'}}>
+                  <div className="rainWrap" style={{ margin: '10px auto', textAlign: 'center' }}>
+                    <canvas id="rainfallOne" ></canvas>
+                  </div>
+                </div>
+              </div>
               <div className="boxfoot"></div>
             </div>
             <div className="boxall" style={{ height: "1.55rem" }}>
