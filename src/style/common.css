@@ -1272,7 +1272,8 @@ a:hover {
 // Camera state overview
 .main_middle {
 	height: 100%;
-	width: 100%;
+	/* width: 100%; */
+	padding-left: 2rem;
 }
 
 .main_middle_list {
@@ -1347,7 +1348,8 @@ a:hover {
 
 .mapnav li{
 	float: left;
-	margin-right: 8px;
+	margin-right: 4px;
+	margin-left: 4px;
 }
 
 

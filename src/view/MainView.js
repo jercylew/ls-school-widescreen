@@ -1620,7 +1620,7 @@ class MainView extends Component {
               />
               <div className="boxfoot"></div>
             </div>
-            <div className="boxall" style={{ height: "4.2rem" }}>
+            <div className="boxall" style={{ height: "4.05rem" }}>
               <div className="alltitle">紫外灯消毒记录</div>
               <div className="main_table">
                 <table>
@@ -1707,7 +1707,7 @@ class MainView extends Component {
               }
               {/* <div className="map4" id="map_1"></div> */}
             </div>
-            <div className="boxall" style={{ height: "2.83rem" }}>
+            <div className="boxall" style={{ height: "2.65rem" }}>
               <div className="alltitle">视频监控</div>
               <div className="main_middle">
                 <div className="main_middle_list">
@@ -1890,7 +1890,7 @@ class MainView extends Component {
             </div>
             <div className="boxall" style={{ height: "1.6rem" }}>
               <div className="alltitle">火灾自动报警监测</div>
-              <div class="mapnav">
+              <div class="mapnav" style={{ alignItems: 'center', display: 'flex', justifyContent: 'center' }}>
                 <ul>
                   <li>
                     <div>
