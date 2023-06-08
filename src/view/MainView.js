@@ -9,6 +9,7 @@ import lbx from '../picture/lbx.png'
 import jt from '../picture/jt.png'
 import map from '../images/layout-hgk-kindergarten.png'
 import camera_icon from '../images/camera.png'
+import camera_state_bg from '../images/main_middle.png'
 
 import ReactECharts from 'echarts-for-react';
 import * as echarts from 'echarts/lib/echarts';
@@ -342,7 +343,7 @@ class MainView extends Component {
       3000
     );
 
-    creatBall('rainfallOne', 60);
+    // creatBall('rainfallOne', 60);
   }
 
   componentWillUnmount() {
@@ -499,6 +500,11 @@ class MainView extends Component {
         { id: 6, name: '中一班回画室', online: true },
         { id: 7, name: '小三班教室', online: false },
         { id: 8, name: '小一班教室', online: true },
+        { id: 9, name: '小一班教室', online: true },
+        { id: 10, name: '小二班教室', online: true },
+        { id: 11, name: '小三班教室', online: false },
+        { id: 12, name: '行政楼财务', online: true },
+        { id: 13, name: '教导处', online: false },
       ]
     });
   }
@@ -729,7 +735,7 @@ class MainView extends Component {
       },
       legend: {
         top: '0%',
-        data: ['总线路', '空调', '插座'],
+        data: ['总线路', '空调', '插座', '总电流'],
         textStyle: {
           color: 'rgba(255,255,255,.5)',
           fontSize: '12',
@@ -757,10 +763,9 @@ class MainView extends Component {
           }
 
         },
-
         data: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24']
-
-      }, {
+      },
+      {
 
         axisPointer: { show: false },
         axisLine: { show: false },
@@ -781,7 +786,6 @@ class MainView extends Component {
             fontSize: 12,
           },
         },
-
         splitLine: {
           lineStyle: {
             color: 'rgba(255,255,255,.1)'
@@ -816,7 +820,7 @@ class MainView extends Component {
           },
           itemStyle: {
             normal: {
-              color: '#0184d5',
+              color: '#ef0425',
               borderColor: 'rgba(221, 220, 107, .1)',
               borderWidth: 12
             }
@@ -874,10 +878,10 @@ class MainView extends Component {
             normal: {
               color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
                 offset: 0,
-                color: 'rgba(0, 216, 135, 0.4)'
+                color: 'rgba(0, 126, 220, 0.4)'
               }, {
                 offset: 0.8,
-                color: 'rgba(0, 216, 135, 0.1)'
+                color: 'rgba(0, 221, 185, 0.1)'
               }], false),
               shadowColor: 'rgba(0, 0, 0, 0.1)',
             }
@@ -890,6 +894,40 @@ class MainView extends Component {
             }
           },
           data: this.state.chTempChartData[2]
+        },
+        {
+          name: '总电流',
+          type: 'line',
+          smooth: true,
+          symbol: 'circle',
+          symbolSize: 5,
+          showSymbol: false,
+          lineStyle: {
+            normal: {
+              color: '#00FFFF',
+              width: 2
+            }
+          },
+          areaStyle: {
+            normal: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                offset: 0,
+                color: 'rgba(0, 216, 105, 0.4)'
+              }, {
+                offset: 0.8,
+                color: 'rgba(0, 216, 105, 0.1)'
+              }], false),
+              shadowColor: 'rgba(0, 0, 0, 0.1)',
+            }
+          },
+          itemStyle: {
+            normal: {
+              color: '#00FFFF',
+              borderColor: 'rgba(221, 220, 110, .1)',
+              borderWidth: 12
+            }
+          },
+          data: this.state.chPowerChartData[0]
         },
       ]
     };
@@ -1115,6 +1153,225 @@ class MainView extends Component {
         }
       ]
     };
+    const fireControlWaterChartOption = {
+      tooltip: {
+          formatter: "{a} <br/>{c} {b}"
+      },
+      toolbox: {
+          show: false,
+          feature: {
+              restore: {
+                  show: true
+              },
+              saveAsImage: {
+                  show: true
+              }
+          }
+      },
+      series: [
+      // {
+      //     name: '水池水位',
+      //     type: 'gauge',
+      //     center: ['25%', '50%'],
+      //     z: 3,
+      //     min: 0,
+      //     max: 20,
+      //     splitNumber: 10,
+      //     radius: '50%',
+      //     axisLine: {
+      //         lineStyle: {
+      //             color: [[0.2, '#7FFF00'], [0.8, '#00FFFF'], [1, '#FF0000']],
+      //             width: 6
+      //         }
+      //     },
+      //     axisTick: {
+      //         length: 5,
+      //         lineStyle: {
+      //             color: 'auto'
+      //         }
+      //     },
+      //     splitLine: {
+      //         length: 20,
+      //         lineStyle: {
+      //             color: 'auto'
+      //         }
+      //     },
+      //     pointer: {
+      //         width: 2
+      //     },
+      //     title: {
+      //         textStyle: {
+      //             fontWeight: 'normal',
+      //             color: '#fff',
+      //             fontSize: 12,
+      //             offsetCenter: ['15%', '-20%'],
+      //         }
+      //     },
+      //     detail: {
+      //         textStyle: {
+      //             fontWeight: 'normal',
+      //             fontSize: 12
+      //         }
+      //     },
+      //     data: [{
+      //         value: 1,
+      //         name: '水池水位'
+      //     }]
+      // },
+      {
+          name: '喷淋水压',
+          type: 'gauge',
+          center: ['50%', '50%'],
+          z: 3,
+          min: 0,
+          max: 8,
+          splitNumber: 8,
+          radius: '100%',
+          axisLine: {
+              lineStyle: {
+                  color: [[0.2, '#7CFC00'], [0.8, '#00FFFF'], [1, '#FF0000']],
+                  width: 6
+              }
+          },
+          axisTick: {
+              length: 15,
+              lineStyle: {
+                  color: 'auto'
+              }
+          },
+          splitLine: {
+              length: 20,
+              lineStyle: {
+                  color: 'auto'
+              }
+          },
+          pointer: {
+              width: 4
+          },
+          title: {
+              textStyle: {
+                  fontWeight: 'normal',
+                  color: '#fff',
+                  fontSize: 12,
+              }
+          },
+          detail: {
+              textStyle: {
+                  fontWeight: 'normal',
+                  fontSize: 12
+              }
+          },
+          data: [{
+              value: 4,
+              name: '喷淋水压（ MPa ）'
+          }]
+      },
+      // {
+      //     name: 'A相电压',
+      //     type: 'gauge',
+      //     center: ['10%', '60%'],
+      //     radius: '35%',
+      //     min: 0,
+      //     max: 540,
+      //     startAngle: 180,
+      //     endAngle: 0,
+      //     splitNumber: 2,
+      //     axisLine: {
+      //         lineStyle: {
+      //             color: [[0.2, '#7CFC00'], [0.8, '#00FFFF'], [1, '#FF0000']],
+      //             width: 4
+      //         }
+      //     },
+      //     axisTick: {
+      //         length: 12,
+      //         lineStyle: {
+      //             color: 'auto'
+      //         }
+      //     },
+      //     splitLine: {
+      //         length: 20,
+      //         lineStyle: {
+      //             color: 'auto'
+      //         }
+      //     },
+      //     pointer: {
+      //         width: 3
+      //     },
+      //     title: {
+      //         offsetCenter: ['5%', '-20%'],
+      //         color: '#fff',
+      //         fontSize: 12,
+      //     },
+      //     detail: {
+      //         textStyle: {
+      //             fontSize: 12,
+      //             fontWeight: 'normal'
+      //         }
+      //     },
+      //     data: [{
+      //         value: 270,
+      //         name: 'A相电压'
+      //     }]
+      // },
+      // {
+      //     name: '剩余电流',
+      //     type: 'gauge',
+      //     center: ['80%', '60%'],
+      //     radius: '35%',
+      //     min: 0,
+      //     max: 2,
+      //     startAngle: 180,
+      //     endAngle: 0,
+      //     splitNumber: 2,
+      //     axisLine: {
+      //         lineStyle: {
+      //             color: [[0.2, '#7CFC00'], [0.8, '#00FFFF'], [1, '#FF0000']],
+      //             width: 4
+      //         }
+      //     },
+      //     axisTick: {
+      //         splitNumber: 5,
+      //         length: 10,
+      //         lineStyle: {
+      //             color: 'auto'
+      //         }
+      //     },
+      //     axisLabel: {
+      //         formatter: function(v) {
+      //             switch (v + '') {
+      //             case '0':
+      //                 return 'E';
+      //             case '1':
+      //                 return '1/2';
+      //             case '2':
+      //                 return 'F'
+      //             }
+      //         }
+      //     },
+      //     splitLine: {
+      //         length: 15,
+      //         lineStyle: {
+      //             color: 'auto'
+      //         }
+      //     },
+      //     pointer: {
+      //         width: 2
+      //     },
+      //     title: {
+      //         offsetCenter: ['5%', '35%'],
+      //         color: '#fff',
+      //         fontSize: 12,
+      //     },
+      //     detail: {
+      //         show: false
+      //     },
+      //     data: [{
+      //         value: 270,
+      //         name: '剩余电流'
+      //     }]
+      // }
+    ]
+  };
     const alarmLogChartOption = {
       color: ['#1affff', '#ffcc99', '#cc0066'],
       tooltip: {
@@ -1331,7 +1588,7 @@ class MainView extends Component {
         <ul className="clearfix">
           <li>
             <div className="boxall" style={{ height: "2.3rem" }}>
-              <div className="alltitle">线路温度</div>
+              <div className="alltitle">智能用电监测</div>
               <ReactECharts
                 option={chTempChartOption}
                 notMerge={true}
@@ -1341,7 +1598,7 @@ class MainView extends Component {
               />
               <div className="boxfoot"></div>
             </div>
-            <div className="boxall" style={{ height: "2.3rem" }}>
+            {/* <div className="boxall" style={{ height: "2.3rem" }}>
               <div className="alltitle">实时用电量</div>
               <ReactECharts
                 option={chPowerChartOption}
@@ -1351,7 +1608,7 @@ class MainView extends Component {
                 opts={{ renderer: 'svg' }}
               />
               <div className="boxfoot"></div>
-            </div>
+            </div> */}
             <div className="boxall" style={{ height: "1.7rem" }}>
               <div className="alltitle">漏电流</div>
               <ReactECharts
@@ -1363,17 +1620,38 @@ class MainView extends Component {
               />
               <div className="boxfoot"></div>
             </div>
-            <div className="boxall" style={{ height: "1.8rem" }}>
-              <div className="alltitle">视频监控</div>
-              <div className="mini_table">
+            <div className="boxall" style={{ height: "4.2rem" }}>
+              <div className="alltitle">紫外灯消毒记录</div>
+              <div className="main_table">
                 <table>
-                  {/* <thead>
+                  <thead>
                     <tr>
                       <th>序号</th>
                       <th>时间</th>
                       <th>持续时间</th>
                     </tr>
-                  </thead> */}
+                  </thead>
+                  <tbody>
+                    {
+                      this.state.uvLightLogChartData.slice(0, 10).map((log, index) => {
+                        return (
+                          <tr key={`uvLog-${log.id}`} className={(index % 2 === 1) ? 'table_odd_row' : ''}>
+                            <td>{index + 1}</td>
+                            <td>{log.startTime}</td>
+                            <td>{log.elapsed}</td>
+                          </tr>
+                        );
+                      })
+                    }
+                  </tbody>
+                </table>
+              </div>
+              <div className="boxfoot"></div>
+            </div>
+            {/* <div className="boxall" style={{ height: "4.2rem", display: 'none' }}>
+              <div className="alltitle">视频监控</div>
+              <div className="mini_table">
+                <table>
                   <tbody>
                     {
                       this.state.camerasStatusData.slice(this.state.cameraViewScrollIndex,
@@ -1393,7 +1671,7 @@ class MainView extends Component {
                 </table>
               </div>
               <div className="boxfoot"></div>
-            </div>
+            </div> */}
           </li>
           <li>
             <div className="bar">
@@ -1429,7 +1707,55 @@ class MainView extends Component {
               }
               {/* <div className="map4" id="map_1"></div> */}
             </div>
-            <div className="boxall" style={{ height: "2.83rem", display: 'flex', paddingBottom: '0.15rem',
+            <div className="boxall" style={{ height: "2.83rem" }}>
+              <div className="alltitle">视频监控</div>
+              <div className="main_middle">
+                <div className="main_middle_list">
+                  <img src={camera_state_bg} alt='' />
+                  <div className="main_list_title main_list_title1">总设备数量</div>
+                  <span className="main_list_title_num main_list_title_num1">{this.state.camerasStatusData.length}</span>
+                </div>
+                <div className="main_middle_list">
+                  <img src={camera_state_bg} alt='' />
+                  <div className="main_list_title main_list_title2">在线数量</div>
+                  <span className="main_list_title_num main_list_title_num2">12</span>
+                </div>
+                <div className="main_middle_list">
+                  <img src={camera_state_bg} alt='' />
+                  <div className="main_list_title main_list_title3">离线数量</div>
+                  <span className="main_list_title_num main_list_title_num3">2</span>
+                </div>
+              </div>
+              <div className="mini_table" style={{ marginTop: '5px' }}>
+                <table>
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>位置</th>
+                      <th>状态</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {
+                      this.state.camerasStatusData.slice(this.state.cameraViewScrollIndex,
+                        this.state.cameraViewScrollIndex + nNumOfCamerasInView).map((camera, index) => {
+                          return (
+                            <tr key={`camera-${camera.id}`}>
+                              <td style={{ width: '10%' }}><img src={camera_icon} alt="camera icon" height='25rem' width={'35rem'} /></td>
+                              <td style={{ width: '20%', textAlign: 'left' }}>{camera.name}</td>
+                              <td style={{ width: '70%', textAlign: 'center', color: camera.online ? 'green' : 'red' }}>
+                                {camera.online ? '在线' : '离线'}
+                              </td>
+                            </tr>
+                          );
+                        })
+                    }
+                  </tbody>
+                </table>
+              </div>
+              <div className="boxfoot"></div>
+            </div>
+            {/* <div className="boxall" style={{ height: "2.83rem", display: 'flex', paddingBottom: '0.15rem',
             flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' }}>
               <div style={{ width: '100%', height: '100%'}}>
                 <div className="alltitle">线路报警</div>
@@ -1441,7 +1767,7 @@ class MainView extends Component {
                   opts={{ renderer: 'svg' }}
                 />
               </div>
-              <div style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
+              <div style={{ width: '100%', height: '100%', overflow: 'hidden', display: 'none' }}>
                 <div className="alltitle">消防报警</div>
                 <div className="message_scroll_box" style={{marginTop: '5px'}}>
                   <div className="message_scroll">
@@ -1503,10 +1829,10 @@ class MainView extends Component {
                 </div>
               </div>
               <div className="boxfoot"></div>
-            </div>
+            </div> */}
           </li>
           <li>
-            <div className="boxall" style={{ height: "1.6rem" }}>
+            <div className="boxall" style={{ height: "1.6rem", display: 'none' }}>
               <div className="alltitle">环境温湿度</div>
               <ReactECharts
                 option={envTempHumChartOption}
@@ -1517,9 +1843,35 @@ class MainView extends Component {
               />
               <div className="boxfoot"></div>
             </div>
-            <div className="boxall" style={{ height: "1.55rem" }}>
+            <div className="boxall" style={{ height: "3.1rem" }}>
               <div className="alltitle">消防给水</div>
-              <div className="windBox">
+              <div style={{
+                display: 'flex', flexDirection: 'row', alignItems: 'center',
+                justifyContent: 'space-around'
+              }}>
+                <div className="col-box1" style={{ width: '35%', height: '100%' }}>
+                  <div className="col-title">水池水位</div>
+                  <div className="col-main ">
+                    <div className="yjxxtj-box">
+                      <ul className="wgxc-box js-wgxcBox">
+                        <li>
+                          <div className="wgxc-bar"><span className="wgxc-sl-bar" style={{ height: '30%' }}></span></div>
+                          <div className="wgxcName">{`52.44厘米`}</div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <ReactECharts
+                  option={fireControlWaterChartOption}
+                  notMerge={true}
+                  lazyUpdate={true}
+                  style={{ width: '65%', height: '1.8rem' }}
+                  opts={{ renderer: 'svg' }}
+                />
+              </div>
+              
+              {/* <div className="windBox">
                 <div style={{ width: '33%', marginLeft: '4%' }}>
                   <p style={{ color: '#FFFFFF' }}>水池水位</p>
                   <p style={{ color: '#FFFFFF' }}><span className="currentSpeed" id="nowDay">23</span>{` 厘米`}</p>
@@ -1533,10 +1885,105 @@ class MainView extends Component {
                     <canvas id="rainfallOne" ></canvas>
                   </div>
                 </div>
+              </div> */}
+              <div className="boxfoot"></div>
+            </div>
+            <div className="boxall" style={{ height: "1.6rem" }}>
+              <div className="alltitle">火灾自动报警监测</div>
+              <div class="mapnav">
+                <ul>
+                  <li>
+                    <div>
+                      <span style={{ color: 'white' }}>回路断路</span><p>12</p>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <span style={{ color: 'white' }}>打印机故障</span>
+                      <p>3</p>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <span style={{ color: 'white' }}>软件复位</span>
+                      <p>11</p>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <span style={{ color: 'white' }}>丢失</span>
+                      <p>2</p>
+                    </div>
+                  </li>
+                </ul>
               </div>
               <div className="boxfoot"></div>
             </div>
-            <div className="boxall" style={{ height: "1.55rem" }}>
+            <div className="boxall" style={{ height: "3.36rem" }}>
+              <div style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
+                <div className="alltitle">实时告警</div> {/* 过流，过热，漏电流，消防报警事件等 */}
+                <div className="message_scroll_box" style={{ marginTop: '5px' }}>
+                  <div className="message_scroll">
+                    <div class="scroll_top">
+                      <span class="scroll_title">打印机故障</span>
+                      <span class="scroll_level scroll_level01">一级</span>
+                      <a class="localize" href='/#'>{``}</a>
+                      <span class="scroll_timer">17-09-13/9:52</span>
+                    </div>
+                    <div class="msg_cage">
+                      <a class="localize_title" href='/#'>一号主机</a>
+                    </div>
+                    <div class="msg_cage">
+                      <a class="localize_msg" href='/#'>一栋一区23楼</a>
+                    </div>
+                  </div>
+                  <div className="message_scroll">
+                    <div class="scroll_top">
+                      <span class="scroll_title">回路断路</span>
+                      <span class="scroll_level scroll_level03">三级</span>
+                      <a class="localize"></a>
+                      <span class="scroll_timer">17-09-13/9:52</span>
+                    </div>
+                    <div class="msg_cage">
+                      <a class="localize_title">二号主机</a>
+                    </div>
+                    <div class="msg_cage">
+                      <a class="localize_msg">一栋二区5楼</a>
+                    </div>
+                  </div>
+                  <div className="message_scroll">
+                    <div class="scroll_top">
+                      <span class="scroll_title">电源断路</span>
+                      <span class="scroll_level scroll_level02">四级</span>
+                      <a class="localize"></a>
+                      <span class="scroll_timer">17-09-13/9:52</span>
+                    </div>
+                    <div class="msg_cage">
+                      <a class="localize_title">主电箱</a>
+                    </div>
+                    <div class="msg_cage">
+                      <a class="localize_msg">行政办公楼203室</a>
+                    </div>
+                  </div>
+                  <div className="message_scroll">
+                    <div class="scroll_top">
+                      <span class="scroll_title">数据流量警示4</span>
+                      <span class="scroll_level scroll_level01">五级</span>
+                      <a class="localize"></a>
+                      <span class="scroll_timer">17-09-13/9:52</span>
+                    </div>
+                    <div class="msg_cage">
+                      <a class="localize_title">下载大量视频</a>
+                    </div>
+                    <div class="msg_cage">
+                      <a class="localize_msg">教研楼4楼401室</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="boxfoot"></div>
+            </div>
+            <div className="boxall" style={{ height: "1.55rem", display: 'none' }}>
               <div className="alltitle">空气质量</div>
               <div className='allnav' style={{ paddingTop: '0.2rem' }}>
                 <div style={{ marginVertical: '4rem', height: '2.5rem' }}>
@@ -1562,7 +2009,7 @@ class MainView extends Component {
               </div>
               <div className="boxfoot"></div>
             </div>
-            <div className="boxall" style={{ height: "3.36rem" }}>
+            <div className="boxall" style={{ height: "3.36rem", display: 'none' }}>
               <div className="alltitle">紫外灯消毒记录</div>
               <div className="main_table">
                 <table>
