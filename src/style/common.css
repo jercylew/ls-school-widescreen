@@ -195,10 +195,10 @@ a:hover {
 }
 
 .weather {
-	position: absolute;
+	/* position: absolute; */
 	right: .3rem;
 	top: 0;
-	line-height: .75rem;
+	/* line-height: .75rem; */
 	text-align: center;
 }
 
@@ -215,11 +215,30 @@ a:hover {
 	text-align: center;
 }
 
+.datetime {
+	position: absolute;
+	right: .3rem;
+	top: 0;
+	line-height: .75rem;
+	text-align: center;
+}
+
+.datetime img {
+	width: .37rem;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.datetime span {
+	color: rgba(255, 255, 255, .7);
+	font-size: .18rem;
+	padding-right: .1rem;
+	text-align: center;
+}
+
 .mainbox {
 	padding: 0rem .1rem 0rem .1rem;
 }
-
-.mainbox>ul {}
 
 .mainbox>ul>li {
 	float: left;
@@ -293,7 +312,7 @@ a:hover {
 
 .bar {
 	background: rgba(101, 132, 226, .1);
-	padding: .15rem;
+	/* padding: .15rem; */
 }
 
 .barbox li,
@@ -849,7 +868,7 @@ a:hover {
 }
 
 .weather>div {
-	width: 0.8rem;
+	/* width: 0.8rem; */
 	height: 100%;
 }
 

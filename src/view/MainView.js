@@ -5,11 +5,13 @@ import { getAirQuality, getWeatherImage } from '../lib/WeatherUtils';
 import { creatBall } from '../lib/WaterBall';
 import axios from "axios";
 
-import lbx from '../picture/lbx.png'
-import jt from '../picture/jt.png'
-import map from '../images/layout-hgk-kindergarten.png'
-import camera_icon from '../images/camera.png'
-import camera_state_bg from '../images/main_middle.png'
+import lbx from '../picture/lbx.png';
+import jt from '../picture/jt.png';
+import map from '../images/layout-hgk-kindergarten.png';
+import camera_icon from '../images/camera.png';
+import camera_state_bg from '../images/main_middle.png';
+import temp_icon from '../images/temp_icon.png';
+import humi_icon from '../images/humi_icon.png';
 
 import ReactECharts from 'echarts-for-react';
 import * as echarts from 'echarts/lib/echarts';
@@ -1674,18 +1676,69 @@ class MainView extends Component {
             </div> */}
           </li>
           <li>
-            <div className="bar">
-              <div className="barbox">
-                <ul className="clearfix">
-                  <li className="pulll_left counter" style={{ color: '#ffeb7b', paddingTop: '0.1rem' }}>{numToPaddedText(classRooms.length)}</li>
-                  <li className="pulll_left counter" style={{ color: '#ffeb7b' }}>{this.state.currentClassRoomName}</li>
-                </ul>
+            <div className="bar" style={{ display: 'flex', flexFlow: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+              <div style={{ width: '45%' }}>
+                <div className="barbox">
+                  <ul className="clearfix">
+                    <li className="pulll_left counter" style={{ color: '#ffeb7b', paddingTop: '0.1rem' }}>{numToPaddedText(classRooms.length)}</li>
+                    <li className="pulll_left counter" style={{ color: '#ffeb7b' }}>{this.state.currentClassRoomName}</li>
+                  </ul>
+                </div>
+                <div className="barbox2">
+                  <ul className="clearfix">
+                    <li className="pulll_left">教室总数</li>
+                    <li className="pulll_left">当前教室</li>
+                  </ul>
+                </div>
               </div>
-              <div className="barbox2">
-                <ul className="clearfix">
-                  <li className="pulll_left">教室总数</li>
-                  <li className="pulll_left">当前教室</li>
-                </ul>
+              <div className='allnav' style={{ width: '45%' }}>
+                {/* <div style={{ marginVertical: '2rem'}}>
+                  <div style={{
+                    color: 'white', backgroundColor: this.state.weatherQualityColor, display: 'flex',
+                    justifyContent: 'center', alignItems: 'center',
+                    float: 'left', fontSize: '0.15rem',
+                    height: '0.35rem', width: '0.35rem', borderRadius: '50%'
+                  }}>{this.state.weatherQuality}</div>
+                  <div className="weather">
+                    <img id="weatherImg" src={getWeatherImage(this.state.weatherType)} alt="" />
+                    <div id="weather">
+                      <p className="active">{this.state.weatherType}</p>
+                      <p>{`${this.state.weatherTemp} ℃`}</p>
+                      <p>深圳市龙岗区</p>
+                    </div>
+                  </div>
+                </div> */}
+                <div style={{ display: 'flex', flexFlow: 'row wrap', justifyContent: 'flex-end', marginTop: '0.2rem', marginBottom: '0.2rem' }}>
+                  <div>
+                    <img src={temp_icon} height={'40rem'} width={'40rem'} style={{
+                      display: 'block', borderRadius: '50%', marginLeft: 'auto', marginRight: 'auto' }} alt='' />
+                    <div style={{ textAlign: 'center' }}>
+                      <span style={{ color: 'yellow', fontSize: '13px' }}>{`温度：34℃`}</span>
+                    </div>
+                  </div>
+                  <div style={{ marginLeft: '0.1rem', marginRight: '0.1rem' }}>
+                    <img src={humi_icon} height={'40rem'} width={'40rem'} style={{
+                      display: 'block', borderRadius: '50%', marginLeft: 'auto', marginRight: 'auto' }} alt='' />
+                    <div style={{ textAlign: 'center' }}>
+                      <span style={{ color: 'yellow', fontSize: '13px' }}>{`湿度：54%`}</span>
+                    </div>
+                  </div>
+                  <div style={{ marginLeft: '0.18rem', marginRight: '0.1rem' }}>
+                    <img src={getWeatherImage(this.state.weatherType)} height={'40rem'} width={'40rem'} style={{
+                      display: 'block', borderRadius: '50%', marginLeft: 'auto', marginRight: 'auto' }} alt="" />
+                    <div style={{ textAlign: 'center' }}>
+                      <span style={{ color: 'yellow', fontSize: '13px' }}>{this.state.weatherType}</span>
+                    </div>
+                  </div>
+                  <div style={{ marginLeft: '0.1rem', marginRight: '0.1rem' }}>
+                    <div style={{
+                      color: 'white', backgroundColor: this.state.weatherQualityColor, display: 'flex',
+                      justifyContent: 'center', alignItems: 'center',
+                      float: 'left', fontSize: '0.15rem',
+                      height: '0.35rem', width: '0.35rem', borderRadius: '50%'
+                    }}>{this.state.weatherQuality}</div>
+                  </div>
+                </div>
               </div>
             </div>
             <div className="map">
@@ -1844,7 +1897,7 @@ class MainView extends Component {
               <div className="boxfoot"></div>
             </div>
             <div className="boxall" style={{ height: "3.1rem" }}>
-              <div className="alltitle">消防给水</div>
+              <div className="alltitle">消防</div>
               <div style={{
                 display: 'flex', flexDirection: 'row', alignItems: 'center',
                 justifyContent: 'space-around'

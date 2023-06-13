@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { dateToDateTimeString } from '../lib/DateUtil';
 
 class HeadView extends Component {
 
@@ -31,19 +32,14 @@ class HeadView extends Component {
 
     render() {
         const { datetime } = this.state;
-        const y = datetime.getFullYear();
-        const mt = datetime.getMonth() + 1;
-        const day = datetime.getDate();
-        const h = datetime.getHours(); 
-        const m = datetime.getMinutes();
-        const s = datetime.getSeconds();
+        const timeStr = dateToDateTimeString(datetime);
 
         return (
             <div className="head">
                 <h1>智慧平安校园</h1>
-                {/* <div className="weather">
-                    <span id="showTime">{y + "-" + mt + "-" + day + "  " + h + ":" + m + ":" + s}</span>
-                </div> */}
+                <div className="datetime">
+                    <span>{timeStr}</span>
+                </div>
             </div>
         );
     }
