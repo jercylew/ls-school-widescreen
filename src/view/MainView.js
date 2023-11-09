@@ -737,7 +737,7 @@ class MainView extends Component {
       },
       legend: {
         top: '0%',
-        data: ['总线路', '空调', '插座', '总电流'],
+        data: ['总线路温度', '空调温度', '插座温度', '总电流'],
         textStyle: {
           color: 'rgba(255,255,255,.5)',
           fontSize: '12',
@@ -796,7 +796,7 @@ class MainView extends Component {
       }],
       series: [
         {
-          name: '总线路',
+          name: '总线路温度',
           type: 'line',
           smooth: true,
           symbol: 'circle',
@@ -830,7 +830,7 @@ class MainView extends Component {
           data: this.state.chTempChartData[0]
         },
         {
-          name: '空调',
+          name: '空调温度',
           type: 'line',
           smooth: true,
           symbol: 'circle',
@@ -864,7 +864,7 @@ class MainView extends Component {
           data: this.state.chTempChartData[1]
         },
         {
-          name: '插座',
+          name: '插座温度',
           type: 'line',
           smooth: true,
           symbol: 'circle',

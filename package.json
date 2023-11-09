@@ -1,7 +1,7 @@
 {
   "name": "ls-school-widescreen",
   "version": "0.1.0",
-  "homepage": "http://www.lengshuotech.com:3000/ls-school-widescreen",
+  "homepage": "http://10.44.80.15:3000/ls-school-widescreen",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.14.1",
