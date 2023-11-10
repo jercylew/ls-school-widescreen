@@ -67,10 +67,10 @@ const nNumOfCamerasInView = 4;
  * ]
  */
 const classRooms = [
-  { id: '63dcbd467578b047b751ce3a', pm: 237, refrg: 186, rm: [227, 229] }, //大一班
-  { id: '63dcbd8c7578b047b751ef40', pm: 236, refrg: 187, rm: [223, 228] }, //大二班
-  { id: '63dce0407578b047b7639f9b', pm: 234, refrg: 188, rm: [222, 224] }, //大三班
-  { id: '63dcf0057578b047b76beb0e', pm: 235, refrg: 189, rm: [225, 226] }, //大四班
+  { id: '654ce61a36145236eea737d5', pm: 237, refrg: 186, rm: [227, 229] }, //大一班
+  { id: '654ce6c1d3b37ed97e197fe7', pm: 236, refrg: 187, rm: [223, 228] }, //大二班
+  { id: '654ce728d3b37ed97e198709', pm: 234, refrg: 188, rm: [222, 224] }, //大三班
+  { id: '654ce74ad3b37ed97e198a12', pm: 235, refrg: 189, rm: [225, 226] }, //大四班
   // { id: '63d8aa420b0dad2f9cb0cb8d', pm: 0, refrg: 0, rm: [0, 0] },
 ];
 
@@ -247,7 +247,7 @@ class MainView extends Component {
     this.tickDataCount = 0;
     this.tickRoomCount = 0;
     this.historyChartsData = {
-      '63dcbd467578b047b751ce3a': {
+      '654ce61a36145236eea737d5': {
         chTempChartData: [
           [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
           [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -262,7 +262,7 @@ class MainView extends Component {
           [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         ], //[[], []] temp and humidity
       },
-      '63dcbd8c7578b047b751ef40': {
+      '654ce6c1d3b37ed97e197fe7': {
         chTempChartData: [
           [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
           [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -277,7 +277,7 @@ class MainView extends Component {
           [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         ], //[[], []] temp and humidity
       },
-      '63dce0407578b047b7639f9b': {
+      '654ce728d3b37ed97e198709': {
         chTempChartData: [
           [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
           [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -292,7 +292,7 @@ class MainView extends Component {
           [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         ], //[[], []] temp and humidity
       },
-      '63dcf0057578b047b76beb0e': {
+      '654ce74ad3b37ed97e198a12': {
         chTempChartData: [
           [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
           [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -1226,7 +1226,7 @@ class MainView extends Component {
           center: ['50%', '50%'],
           z: 3,
           min: 0,
-          max: 8,
+          max: 1.6,
           splitNumber: 8,
           radius: '100%',
           axisLine: {
@@ -1264,7 +1264,7 @@ class MainView extends Component {
               }
           },
           data: [{
-              value: 4,
+              value: 0.55,
               name: '喷淋水压（ MPa ）'
           }]
       },
@@ -1909,7 +1909,7 @@ class MainView extends Component {
                       <ul className="wgxc-box js-wgxcBox">
                         <li>
                           <div className="wgxc-bar"><span className="wgxc-sl-bar" style={{ height: '30%' }}></span></div>
-                          <div className="wgxcName">{`52.44厘米`}</div>
+                          <div className="wgxcName">{`0.0 厘米`}</div>
                         </li>
                       </ul>
                     </div>
