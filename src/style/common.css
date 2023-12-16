@@ -377,7 +377,7 @@ a:hover {
 	position: relative;
 	height: 4.5rem;
 	z-index: 9;
-	padding-left: 1rem;
+	padding-left: 0rem;
 	padding-right: 1rem;
 }
 
@@ -393,7 +393,7 @@ a:hover {
 .map2,
 .map3 {
 	position: absolute;
-	opacity: .85
+	opacity: .33
 }
 
 .map1 {
@@ -410,8 +410,8 @@ a:hover {
 }
 
 .map3 {
-	top: .25rem;
-	z-index: 1;
+	top: .3rem;
+	/* z-index: 1; */
 }
 
 .alarmIconNormal1 {

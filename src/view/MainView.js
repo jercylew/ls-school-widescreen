@@ -7,7 +7,7 @@ import axios from "axios";
 
 import lbx from '../picture/lbx.png';
 import jt from '../picture/jt.png';
-import map from '../images/layout-hgk-kindergarten.png';
+import map from '../images/smart-campus-bg.png';
 import camera_icon from '../images/camera.png';
 import camera_state_bg from '../images/main_middle.png';
 import temp_icon from '../images/temp_icon.png';
@@ -67,11 +67,13 @@ const nNumOfCamerasInView = 4;
  * ]
  */
 const classRooms = [
-  { id: '654ce61a36145236eea737d5', pm: 237, refrg: 186, rm: [227, 229] }, //大一班
-  { id: '654ce6c1d3b37ed97e197fe7', pm: 236, refrg: 187, rm: [223, 228] }, //大二班
-  { id: '654ce728d3b37ed97e198709', pm: 234, refrg: 188, rm: [222, 224] }, //大三班
-  { id: '654ce74ad3b37ed97e198a12', pm: 235, refrg: 189, rm: [225, 226] }, //大四班
-  // { id: '63d8aa420b0dad2f9cb0cb8d', pm: 0, refrg: 0, rm: [0, 0] },
+  // { id: '654ce61a36145236eea737d5', pm: 237, refrg: 186, rm: [227, 229] }, //大一班
+  // { id: '654ce6c1d3b37ed97e197fe7', pm: 236, refrg: 187, rm: [223, 228] }, //大二班
+  // { id: '654ce728d3b37ed97e198709', pm: 234, refrg: 188, rm: [222, 224] }, //大三班
+  // { id: '654ce74ad3b37ed97e198a12', pm: 235, refrg: 189, rm: [225, 226] }, //大四班
+
+  { id: '65673e6eecce08efe00d6abd', pm: 0, refrg: 0, rm: [0, 0] } //测试
+  
 ];
 
 const getSingleDataName = dataInfoStr => {
@@ -247,7 +249,7 @@ class MainView extends Component {
     this.tickDataCount = 0;
     this.tickRoomCount = 0;
     this.historyChartsData = {
-      '654ce61a36145236eea737d5': {
+      '65673e6eecce08efe00d6abd': {
         chTempChartData: [
           [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
           [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -262,66 +264,66 @@ class MainView extends Component {
           [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         ], //[[], []] temp and humidity
       },
-      '654ce6c1d3b37ed97e197fe7': {
-        chTempChartData: [
-          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-        ], //[[], [], []] 3-channel temp data
-        chPowerChartData: [
-          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-        ], //[[], [], [], [], []] 5-channel power (current * 220V) data
-        envTempHumChartData: [
-          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-        ], //[[], []] temp and humidity
-      },
-      '654ce728d3b37ed97e198709': {
-        chTempChartData: [
-          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-        ], //[[], [], []] 3-channel temp data
-        chPowerChartData: [
-          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-        ], //[[], [], [], [], []] 5-channel power (current * 220V) data
-        envTempHumChartData: [
-          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-        ], //[[], []] temp and humidity
-      },
-      '654ce74ad3b37ed97e198a12': {
-        chTempChartData: [
-          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-        ], //[[], [], []] 3-channel temp data
-        chPowerChartData: [
-          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-        ], //[[], [], [], [], []] 5-channel power (current * 220V) data
-        envTempHumChartData: [
-          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-        ], //[[], []] temp and humidity
-      },
-      '63d8aa420b0dad2f9cb0cb8d': {
-        chTempChartData: [
-          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-        ], //[[], [], []] 3-channel temp data
-        chPowerChartData: [
-          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-        ], //[[], [], [], [], []] 5-channel power (current * 220V) data
-        envTempHumChartData: [
-          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-        ], //[[], []] temp and humidity
-      },
+      // '654ce6c1d3b37ed97e197fe7': {
+      //   chTempChartData: [
+      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+      //   ], //[[], [], []] 3-channel temp data
+      //   chPowerChartData: [
+      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+      //   ], //[[], [], [], [], []] 5-channel power (current * 220V) data
+      //   envTempHumChartData: [
+      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+      //   ], //[[], []] temp and humidity
+      // },
+      // '654ce728d3b37ed97e198709': {
+      //   chTempChartData: [
+      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+      //   ], //[[], [], []] 3-channel temp data
+      //   chPowerChartData: [
+      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+      //   ], //[[], [], [], [], []] 5-channel power (current * 220V) data
+      //   envTempHumChartData: [
+      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+      //   ], //[[], []] temp and humidity
+      // },
+      // '654ce74ad3b37ed97e198a12': {
+      //   chTempChartData: [
+      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+      //   ], //[[], [], []] 3-channel temp data
+      //   chPowerChartData: [
+      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+      //   ], //[[], [], [], [], []] 5-channel power (current * 220V) data
+      //   envTempHumChartData: [
+      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+      //   ], //[[], []] temp and humidity
+      // },
+      // '63d8aa420b0dad2f9cb0cb8d': {
+      //   chTempChartData: [
+      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+      //   ], //[[], [], []] 3-channel temp data
+      //   chPowerChartData: [
+      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+      //   ], //[[], [], [], [], []] 5-channel power (current * 220V) data
+      //   envTempHumChartData: [
+      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+      //   ], //[[], []] temp and humidity
+      // },
     };
   }
 
@@ -1171,55 +1173,6 @@ class MainView extends Component {
           }
       },
       series: [
-      // {
-      //     name: '水池水位',
-      //     type: 'gauge',
-      //     center: ['25%', '50%'],
-      //     z: 3,
-      //     min: 0,
-      //     max: 20,
-      //     splitNumber: 10,
-      //     radius: '50%',
-      //     axisLine: {
-      //         lineStyle: {
-      //             color: [[0.2, '#7FFF00'], [0.8, '#00FFFF'], [1, '#FF0000']],
-      //             width: 6
-      //         }
-      //     },
-      //     axisTick: {
-      //         length: 5,
-      //         lineStyle: {
-      //             color: 'auto'
-      //         }
-      //     },
-      //     splitLine: {
-      //         length: 20,
-      //         lineStyle: {
-      //             color: 'auto'
-      //         }
-      //     },
-      //     pointer: {
-      //         width: 2
-      //     },
-      //     title: {
-      //         textStyle: {
-      //             fontWeight: 'normal',
-      //             color: '#fff',
-      //             fontSize: 12,
-      //             offsetCenter: ['15%', '-20%'],
-      //         }
-      //     },
-      //     detail: {
-      //         textStyle: {
-      //             fontWeight: 'normal',
-      //             fontSize: 12
-      //         }
-      //     },
-      //     data: [{
-      //         value: 1,
-      //         name: '水池水位'
-      //     }]
-      // },
       {
           name: '喷淋水压',
           type: 'gauge',
@@ -1257,121 +1210,26 @@ class MainView extends Component {
                   fontSize: 12,
               }
           },
+          axisLabel: {
+            color: 'inherit',
+            distance: 10,
+            fontSize: 12
+          },
           detail: {
-              textStyle: {
-                  fontWeight: 'normal',
-                  fontSize: 12
-              }
+            valueAnimation: true,
+            formatter: '{value} MPa',
+            color: 'inherit',
+            textStyle: {
+                fontWeight: 'normal',
+                color: '#fff',
+                fontSize: 11
+            }
           },
           data: [{
               value: 0.55,
-              name: '喷淋水压（ MPa ）'
+              // name: '（ MPa ）'
           }]
-      },
-      // {
-      //     name: 'A相电压',
-      //     type: 'gauge',
-      //     center: ['10%', '60%'],
-      //     radius: '35%',
-      //     min: 0,
-      //     max: 540,
-      //     startAngle: 180,
-      //     endAngle: 0,
-      //     splitNumber: 2,
-      //     axisLine: {
-      //         lineStyle: {
-      //             color: [[0.2, '#7CFC00'], [0.8, '#00FFFF'], [1, '#FF0000']],
-      //             width: 4
-      //         }
-      //     },
-      //     axisTick: {
-      //         length: 12,
-      //         lineStyle: {
-      //             color: 'auto'
-      //         }
-      //     },
-      //     splitLine: {
-      //         length: 20,
-      //         lineStyle: {
-      //             color: 'auto'
-      //         }
-      //     },
-      //     pointer: {
-      //         width: 3
-      //     },
-      //     title: {
-      //         offsetCenter: ['5%', '-20%'],
-      //         color: '#fff',
-      //         fontSize: 12,
-      //     },
-      //     detail: {
-      //         textStyle: {
-      //             fontSize: 12,
-      //             fontWeight: 'normal'
-      //         }
-      //     },
-      //     data: [{
-      //         value: 270,
-      //         name: 'A相电压'
-      //     }]
-      // },
-      // {
-      //     name: '剩余电流',
-      //     type: 'gauge',
-      //     center: ['80%', '60%'],
-      //     radius: '35%',
-      //     min: 0,
-      //     max: 2,
-      //     startAngle: 180,
-      //     endAngle: 0,
-      //     splitNumber: 2,
-      //     axisLine: {
-      //         lineStyle: {
-      //             color: [[0.2, '#7CFC00'], [0.8, '#00FFFF'], [1, '#FF0000']],
-      //             width: 4
-      //         }
-      //     },
-      //     axisTick: {
-      //         splitNumber: 5,
-      //         length: 10,
-      //         lineStyle: {
-      //             color: 'auto'
-      //         }
-      //     },
-      //     axisLabel: {
-      //         formatter: function(v) {
-      //             switch (v + '') {
-      //             case '0':
-      //                 return 'E';
-      //             case '1':
-      //                 return '1/2';
-      //             case '2':
-      //                 return 'F'
-      //             }
-      //         }
-      //     },
-      //     splitLine: {
-      //         length: 15,
-      //         lineStyle: {
-      //             color: 'auto'
-      //         }
-      //     },
-      //     pointer: {
-      //         width: 2
-      //     },
-      //     title: {
-      //         offsetCenter: ['5%', '35%'],
-      //         color: '#fff',
-      //         fontSize: 12,
-      //     },
-      //     detail: {
-      //         show: false
-      //     },
-      //     data: [{
-      //         value: 270,
-      //         name: '剩余电流'
-      //     }]
-      // }
+      }
     ]
   };
     const alarmLogChartOption = {
@@ -1677,7 +1535,7 @@ class MainView extends Component {
           </li>
           <li>
             <div className="bar" style={{ display: 'flex', flexFlow: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
-              <div style={{ width: '45%' }}>
+              <div style={{ width: '55%' }}>
                 <div className="barbox">
                   <ul className="clearfix">
                     <li className="pulll_left counter" style={{ color: '#ffeb7b', paddingTop: '0.1rem' }}>{numToPaddedText(classRooms.length)}</li>
@@ -1686,8 +1544,8 @@ class MainView extends Component {
                 </div>
                 <div className="barbox2">
                   <ul className="clearfix">
-                    <li className="pulll_left">教室总数</li>
-                    <li className="pulll_left">当前教室</li>
+                    {/* <li className="pulll_left">教室总数</li>
+                    <li className="pulll_left">当前教室</li> */}
                   </ul>
                 </div>
               </div>
@@ -1730,7 +1588,7 @@ class MainView extends Component {
                       <span style={{ color: 'yellow', fontSize: '13px' }}>{this.state.weatherType}</span>
                     </div>
                   </div>
-                  <div style={{ marginLeft: '0.1rem', marginRight: '0.1rem' }}>
+                  <div style={{ marginLeft: '0.1rem', marginRight: '0.1rem', paddingTop: '0.05rem' }}>
                     <div style={{
                       color: 'white', backgroundColor: this.state.weatherQualityColor, display: 'flex',
                       justifyContent: 'center', alignItems: 'center',
@@ -1744,7 +1602,9 @@ class MainView extends Component {
             <div className="map">
               <div className="map1"><img src={lbx} alt="lbx" /></div>
               <div className="map2"><img src={jt} alt="jt" /></div>
-              <div className="map3"><img src={map} alt="map" /></div>
+              <div className="map3">
+                <img src={map} alt="map" />
+              </div>
               {
                 classRooms.map((cr, index) => {
                   if (this.state.classRoomStatus[index] !== 0) {
@@ -1760,7 +1620,7 @@ class MainView extends Component {
               }
               {/* <div className="map4" id="map_1"></div> */}
             </div>
-            <div className="boxall" style={{ height: "2.65rem" }}>
+            <div className="boxall" style={{ height: "2.94rem" }}>
               <div className="alltitle">视频监控</div>
               <div className="main_middle">
                 <div className="main_middle_list">
@@ -1899,8 +1759,8 @@ class MainView extends Component {
             <div className="boxall" style={{ height: "3.1rem" }}>
               <div className="alltitle">消防</div>
               <div style={{
-                display: 'flex', flexDirection: 'row', alignItems: 'center',
-                justifyContent: 'space-around'
+                display: 'flex', flexDirection: 'row', alignItems: 'center', paddingTop: '0.15rem',
+                paddingLeft: '0.4rem', justifyContent: 'space-around'
               }}>
                 <div className="col-box1" style={{ width: '35%', height: '100%' }}>
                   <div className="col-title">水池水位</div>
@@ -1908,37 +1768,28 @@ class MainView extends Component {
                     <div className="yjxxtj-box">
                       <ul className="wgxc-box js-wgxcBox">
                         <li>
-                          <div className="wgxc-bar"><span className="wgxc-sl-bar" style={{ height: '30%' }}></span></div>
+                          <div className="wgxc-bar"><span className="wgxc-sl-bar" style={{ height: '40%' }}></span></div>
                           <div className="wgxcName">{`0.0 厘米`}</div>
                         </li>
                       </ul>
                     </div>
                   </div>
                 </div>
-                <ReactECharts
-                  option={fireControlWaterChartOption}
-                  notMerge={true}
-                  lazyUpdate={true}
-                  style={{ width: '65%', height: '1.8rem' }}
-                  opts={{ renderer: 'svg' }}
-                />
-              </div>
-              
-              {/* <div className="windBox">
-                <div style={{ width: '33%', marginLeft: '4%' }}>
-                  <p style={{ color: '#FFFFFF' }}>水池水位</p>
-                  <p style={{ color: '#FFFFFF' }}><span className="currentSpeed" id="nowDay">23</span>{` 厘米`}</p>
-                </div>
-                <div style={{ width: '31%', marginLeft: '2%' }}>
-                  <p style={{ color: '#FFFFFF' }}>喷淋水压</p>
-                  <p style={{ color: '#FFFFFF' }}><span className="highestSpeed" id="highDay">46</span>{` 千帕`}</p>
-                </div>
-                <div style={{width: '30%'}}>
-                  <div className="rainWrap" style={{ margin: '10px auto', textAlign: 'center' }}>
-                    <canvas id="rainfallOne" ></canvas>
+                <div className="col-box1" style={{ width: '65%', height: '100%', paddingLeft: '0.5rem', }}>
+                  <div className="col-title">喷淋水压</div>
+                  <div className="col-main ">
+                    <div className="yjxxtj-box">
+                      <ReactECharts
+                        option={fireControlWaterChartOption}
+                        notMerge={true}
+                        lazyUpdate={true}
+                        style={{ height: '1.9rem' }}
+                        opts={{ renderer: 'svg' }}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div> */}
+              </div>
               <div className="boxfoot"></div>
             </div>
             <div className="boxall" style={{ height: "1.6rem" }}>
