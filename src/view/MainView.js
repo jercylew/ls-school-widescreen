@@ -1550,22 +1550,6 @@ class MainView extends Component {
                 </div>
               </div>
               <div className='allnav' style={{ width: '45%' }}>
-                {/* <div style={{ marginVertical: '2rem'}}>
-                  <div style={{
-                    color: 'white', backgroundColor: this.state.weatherQualityColor, display: 'flex',
-                    justifyContent: 'center', alignItems: 'center',
-                    float: 'left', fontSize: '0.15rem',
-                    height: '0.35rem', width: '0.35rem', borderRadius: '50%'
-                  }}>{this.state.weatherQuality}</div>
-                  <div className="weather">
-                    <img id="weatherImg" src={getWeatherImage(this.state.weatherType)} alt="" />
-                    <div id="weather">
-                      <p className="active">{this.state.weatherType}</p>
-                      <p>{`${this.state.weatherTemp} ℃`}</p>
-                      <p>深圳市龙岗区</p>
-                    </div>
-                  </div>
-                </div> */}
                 <div style={{ display: 'flex', flexFlow: 'row wrap', justifyContent: 'flex-end', marginTop: '0.2rem', marginBottom: '0.2rem' }}>
                   <div>
                     <img src={temp_icon} height={'40rem'} width={'40rem'} style={{
@@ -1588,13 +1572,16 @@ class MainView extends Component {
                       <span style={{ color: 'yellow', fontSize: '13px' }}>{this.state.weatherType}</span>
                     </div>
                   </div>
-                  <div style={{ marginLeft: '0.1rem', marginRight: '0.1rem', paddingTop: '0.05rem' }}>
+                  <div style={{ marginLeft: '0.1rem', marginRight: '0.1rem', paddingTop: '0.02rem' }}>
                     <div style={{
                       color: 'white', backgroundColor: this.state.weatherQualityColor, display: 'flex',
                       justifyContent: 'center', alignItems: 'center',
                       float: 'left', fontSize: '0.15rem',
                       height: '0.35rem', width: '0.35rem', borderRadius: '50%'
                     }}>{this.state.weatherQuality}</div>
+                    <div style={{ textAlign: 'center' }}>
+                      <span style={{ color: 'yellow', fontSize: '12px' }}>空气质量</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1668,81 +1655,6 @@ class MainView extends Component {
               </div>
               <div className="boxfoot"></div>
             </div>
-            {/* <div className="boxall" style={{ height: "2.83rem", display: 'flex', paddingBottom: '0.15rem',
-            flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' }}>
-              <div style={{ width: '100%', height: '100%'}}>
-                <div className="alltitle">线路报警</div>
-                <ReactECharts
-                  option={alarmLogChartOption}
-                  notMerge={true}
-                  lazyUpdate={true}
-                  style={{ height: '100%' }}
-                  opts={{ renderer: 'svg' }}
-                />
-              </div>
-              <div style={{ width: '100%', height: '100%', overflow: 'hidden', display: 'none' }}>
-                <div className="alltitle">消防报警</div>
-                <div className="message_scroll_box" style={{marginTop: '5px'}}>
-                  <div className="message_scroll">
-                    <div class="scroll_top">
-                      <span class="scroll_title">打印机故障</span>
-                      <span class="scroll_level scroll_level01">一级</span>
-                      <a class="localize" href='/#'>{``}</a>
-                      <span class="scroll_timer">17-09-13/9:52</span>
-                    </div>
-                    <div class="msg_cage">
-                      <a class="localize_title" href='/#'>一号主机</a>
-                    </div>
-                    <div class="msg_cage">
-                      <a class="localize_msg" href='/#'>一栋一区23楼</a>
-                    </div>
-                  </div>
-                  <div className="message_scroll">
-                    <div class="scroll_top">
-                      <span class="scroll_title">回路断路</span>
-                      <span class="scroll_level scroll_level03">三级</span>
-                      <a class="localize"></a>
-                      <span class="scroll_timer">17-09-13/9:52</span>
-                    </div>
-                    <div class="msg_cage">
-                      <a class="localize_title">二号主机</a>
-                    </div>
-                    <div class="msg_cage">
-                      <a class="localize_msg">一栋二区5楼</a>
-                    </div>
-                  </div>
-                  <div className="message_scroll">
-                    <div class="scroll_top">
-                      <span class="scroll_title">电源断路</span>
-                      <span class="scroll_level scroll_level02">四级</span>
-                      <a class="localize"></a>
-                      <span class="scroll_timer">17-09-13/9:52</span>
-                    </div>
-                    <div class="msg_cage">
-                      <a class="localize_title">主电箱</a>
-                    </div>
-                    <div class="msg_cage">
-                      <a class="localize_msg">行政办公楼203室</a>
-                    </div>
-                  </div>
-                  <div className="message_scroll">
-                    <div class="scroll_top">
-                      <span class="scroll_title">数据流量警示4</span>
-                      <span class="scroll_level scroll_level01">五级</span>
-                      <a class="localize"></a>
-                      <span class="scroll_timer">17-09-13/9:52</span>
-                    </div>
-                    <div class="msg_cage">
-                      <a class="localize_title">下载大量视频</a>
-                    </div>
-                    <div class="msg_cage">
-                      <a class="localize_msg">教研楼4楼401室</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="boxfoot"></div>
-            </div> */}
           </li>
           <li>
             <div className="boxall" style={{ height: "1.6rem", display: 'none' }}>
@@ -1775,7 +1687,7 @@ class MainView extends Component {
                     </div>
                   </div>
                 </div>
-                <div className="col-box1" style={{ width: '65%', height: '100%', paddingLeft: '0.5rem', }}>
+                <div className="col-box1" style={{ width: '65%', height: '100%', paddingLeft: '0.5rem', paddingTop: '0.05rem' }}>
                   <div className="col-title">喷淋水压</div>
                   <div className="col-main ">
                     <div className="yjxxtj-box">
