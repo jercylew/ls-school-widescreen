@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import AxiosClient from '../lib/AxiosClient';
 import { dateToTimeString, dateToDateString, numToPaddedText, dateToDateTimeString } from '../lib/DateUtil';
+import { getSingleDataName, getSingleDataValueString,getSingleDataValueInt, getSingleDataValueFloat,
+  getMultDataValueString, getMultDataValueFloat, getMultDataValueInt } from '../lib/DataInfoUtil'
 import { getAirQuality, getWeatherImage } from '../lib/WeatherUtils';
 import { creatBall } from '../lib/WaterBall';
 import axios from "axios";
@@ -76,127 +78,6 @@ const classRooms = [
   
 ];
 
-const getSingleDataName = dataInfoStr => {
-  if (dataInfoStr.indexOf(':') < 0) {
-    return '';
-  }
-  const arDataInfo = dataInfoStr.split(':');
-  if (arDataInfo.length !== 2) {
-    return '';
-  }
-  return arDataInfo[0];
-};
-
-const getSingleDataValueString = dataInfoStr => {
-  if (dataInfoStr.indexOf(':') < 0) {
-    return dataInfoStr;
-  }
-  const arDataInfo = dataInfoStr.split(':');
-  if (arDataInfo.length !== 2) {
-    return "";
-  }
-  return arDataInfo[1];
-};
-
-const getSingleDataValueInt = dataInfoStr => {
-  if (dataInfoStr.indexOf(':') < 0) {
-    return parseInt(dataInfoStr);
-  }
-  const arDataInfo = dataInfoStr.split(':');
-  if (arDataInfo.length !== 2) {
-    return 0;
-  }
-  return parseInt(arDataInfo[1]);
-};
-
-const getSingleDataValueFloat = dataInfoStr => {
-  if (dataInfoStr.indexOf(':') < 0) {
-    return parseFloat(dataInfoStr).toFixed(2);
-  }
-  const arDataInfo = dataInfoStr.split(':');
-  if (arDataInfo.length !== 2) {
-    return 0;
-  }
-  return parseFloat(arDataInfo[1]);
-};
-
-const getMultDataValueString = dataInfoStr => {
-  let outDataVals = [];
-
-  if (dataInfoStr.indexOf(',') < 0) {
-    return getSingleDataValueString(dataInfoStr);
-  }
-
-  let arDataEntries = dataInfoStr.split(',');
-  outDataVals = arDataEntries.map((entry, index) => {
-    return {
-      name: getSingleDataName(entry),
-      value: getSingleDataValueString(entry)
-    };
-  });
-  return outDataVals;
-}
-
-const getMultDataValueFloat = dataInfoStr => {
-  let outDataVals = [];
-
-  if (dataInfoStr.indexOf(',') < 0) {
-    return getSingleDataValueFloat(dataInfoStr);
-  }
-
-  let arDataEntries = dataInfoStr.split(',');
-  outDataVals = arDataEntries.map((entry, index) => {
-    return {
-      name: getSingleDataName(entry),
-      value: getSingleDataValueFloat(entry)
-    };
-  });
-  return outDataVals;
-}
-
-const getMultDataValueInt = dataInfoStr => {
-  let outDataVals = [];
-
-  if (dataInfoStr.indexOf(',') < 0) {
-    return getSingleDataValueFloat(dataInfoStr);
-  }
-
-  let arDataEntries = dataInfoStr.split(',');
-  outDataVals = arDataEntries.map((entry, index) => {
-    return {
-      name: getSingleDataName(entry),
-      value: getSingleDataValueInt(entry)
-    };
-  });
-  return outDataVals;
-}
-
-const getChIndex = text => {
-  let n = parseInt(text);
-
-  if (!isNaN(n)) {
-    return (n-1);
-  }
-
-  text = text.toLowerCase();
-  if (text === 'a') {
-    n = 0;
-  }
-  if (text === 'b') {
-    n = 1;
-  }
-  if (text === 'c') {
-    n = 2;
-  }
-  if (text === 'd') {
-    n = 3;
-  }
-  if (text === 'e') {
-    n = 4;
-  }
-  return n;
-};
-
 class MainView extends Component {
   constructor(props) {
     super(props);
@@ -206,16 +87,14 @@ class MainView extends Component {
       chTempChartData: [
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       ], //[[], [], []] 3-channel temp data
       chPowerChartData: [
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       ], //[[], [], [], [], []] 5-channel power (current * 220V) data
-      envTempHumChartData: [
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-      ], //[[], []] temp and humidity
+      chNames: ['', '', '', '', '', '', '', ''],
 
       uvLightLogChartData: [], //[{datetime, duration}]
       camerasStatusData: [], //[{id, chaName, online}]
@@ -238,7 +117,10 @@ class MainView extends Component {
       //Report from host heartbeat
       sceneInfo: null,//{ address: '深圳市，龙岗区，建新路，建新幼儿园', loc: [321.2221, 156.354], tel: '86-755-8432124' }
       alarmIconBlinkOn: false,
-      classRoomStatus: classRooms.map((cr, index) => 0)
+      classRoomStatus: classRooms.map((cr, index) => 0),
+
+      envTemp: 0,
+      envHum: 0
     };
     this.state = this.initialState;
     this.tickDatetime = this.tickDatetime.bind(this);
@@ -253,77 +135,14 @@ class MainView extends Component {
         chTempChartData: [
           [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
           [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
           [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         ], //[[], [], []] 3-channel temp data
         chPowerChartData: [
           [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
           [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         ], //[[], [], [], [], []] 5-channel power (current * 220V) data
-        envTempHumChartData: [
-          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-        ], //[[], []] temp and humidity
-      },
-      // '654ce6c1d3b37ed97e197fe7': {
-      //   chTempChartData: [
-      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-      //   ], //[[], [], []] 3-channel temp data
-      //   chPowerChartData: [
-      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-      //   ], //[[], [], [], [], []] 5-channel power (current * 220V) data
-      //   envTempHumChartData: [
-      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-      //   ], //[[], []] temp and humidity
-      // },
-      // '654ce728d3b37ed97e198709': {
-      //   chTempChartData: [
-      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-      //   ], //[[], [], []] 3-channel temp data
-      //   chPowerChartData: [
-      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-      //   ], //[[], [], [], [], []] 5-channel power (current * 220V) data
-      //   envTempHumChartData: [
-      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-      //   ], //[[], []] temp and humidity
-      // },
-      // '654ce74ad3b37ed97e198a12': {
-      //   chTempChartData: [
-      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-      //   ], //[[], [], []] 3-channel temp data
-      //   chPowerChartData: [
-      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-      //   ], //[[], [], [], [], []] 5-channel power (current * 220V) data
-      //   envTempHumChartData: [
-      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-      //   ], //[[], []] temp and humidity
-      // },
-      // '63d8aa420b0dad2f9cb0cb8d': {
-      //   chTempChartData: [
-      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-      //   ], //[[], [], []] 3-channel temp data
-      //   chPowerChartData: [
-      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-      //   ], //[[], [], [], [], []] 5-channel power (current * 220V) data
-      //   envTempHumChartData: [
-      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-      //     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-      //   ], //[[], []] temp and humidity
-      // },
+      }
     };
   }
 
@@ -364,101 +183,71 @@ class MainView extends Component {
     let totalCurrent = 0;
     let status = 0;
     let pm25 = 0;
+    let envTemp = 0;
+    let envHum = 0;
+    let waterPress = 0;
+    let waterLevel = 0;
     let powerData = this.state.chPowerChartData;
     let tempData = this.state.chTempChartData;
-    let envTempHumData = this.state.envTempHumChartData;
+    let updatedChannelNames = [];
 
     if (roomData.online) {
+      let channelIndex = 0;
       devices.forEach(device => {
         if (device.devType === 'pm_sensor') {
           pm25 = getSingleDataValueFloat(device.dataInfo);
         }
-        if (device.devType === 'modbus_temp') {
-          let chTempValue = getSingleDataValueFloat(device.dataInfo);
-          if (chTempValue < -30) { // TODO: Modbus reason
-            chTempValue = 0;
+        if (device.devType === 'temp_hum_sensor') {
+          const tempHumValues = getMultDataValueFloat(device.dataInfo);
+          for (let dataItem of tempHumValues) {
+            if (dataItem.name === 'TEMP') {
+              envTemp = dataItem.value;
+            }
+            if (dataItem.name === 'HUMI') {
+              envHum = dataItem.value;
+            }
+          }
+        }
+        if (device.devType === 'electric_channel') {
+          const channelDataValues = getMultDataValueString(device.dataInfo);
+          // const channelId = device.devId.substring(7);
+          let chName = '';
+          let chTemp = 0;
+          // let chState = 0;
+
+          for (let i = 0; i < channelDataValues.length; i++) {
+            if (channelDataValues[i].name === 'NAME') {
+              chName = channelDataValues[i].value;
+              updatedChannelNames.push(chName);
+            }
+            if (channelDataValues[i].name === 'TEMP') {
+              chTemp = parseFloat(channelDataValues[i].value);
+            }
+            if (channelDataValues[i].name === 'LEAKCURRENT') {
+              leakCurrent += parseFloat(channelDataValues[i].value);
+            }
+            if (channelDataValues[i].name === 'CURRENT') {
+              totalCurrent += parseFloat(channelDataValues[i].value);
+            }
+            // if (channelDataValues[i].name === 'STATE') {
+            //   chState = (parseInt(channelDataValues[i].value) === 1);
+            // }
           }
 
-          const chTempName = getSingleDataName(device.dataInfo);
-          const pos = chTempName.lastIndexOf('_');
-          const chIndex = getChIndex(chTempName.substring(pos + 1));
-
-          if (chIndex > 0 && chIndex < tempData.length) {
-            const newTempData = [...tempData[chIndex]]; //Must use object copy instead assignment
-            newTempData.push(chTempValue);
+          if (channelIndex <= 3) {
+            const newTempData = [...tempData[channelIndex]]; //Must use object copy instead assignment
+            newTempData.push(chTemp);
             if (newTempData.length > 24) {
               newTempData.shift();
             }
-            tempData[chIndex] = newTempData;
+            tempData[channelIndex] = newTempData;
           }
-        }
-        if (device.devType === 'refrg_temp_hum_sensor' && device.devId === `RTH.${classRooms[this.state.currentClassRoomIndex].refrg}`) {
-          let envTemp = 0;
-          let envHum = 0;
-          const arTempHumValPairs = getMultDataValueFloat(device.dataInfo);
-          for (const pair of arTempHumValPairs) {
-            if (pair.name.indexOf('TEMP') > 0 && pair.value !== 0) {
-              envTemp = pair.value;
-            }
-            if (pair.name.indexOf('HUMI') > 0 && pair.value !== 0) {
-              envHum = pair.value;
-            }
-          }
-
-          console.log('New temp and hum value: ', envTemp, ', ', envHum);
-
-          const envTempData = [...envTempHumData[0]];
-          const envHumData = [...envTempHumData[1]];
-
-          //Ignore 0 value, simply use the latest one
-          if (Math.abs(envTemp) < 0.1) {
-            envTemp = envTempData[23];
-          }
-          if (Math.abs(envHum) < 0.1) {
-            envHum = envHumData[23];
-          }
-
-          envTempData.push(envTemp);
-          if (envTempData.length > 24) {
-            envTempData.shift();
-          }
-          envHumData.push(envHum);
-          if (envHumData.length > 24) {
-            envHumData.shift();
-          }
-          envTempHumData[0] = envTempData;
-          envTempHumData[1] = envHumData;
-        }
-        if (device.devType === 'modbus_relay') {
-
-        }
-        if (device.devType === 'modbus_current') {
-          totalCurrent += Math.abs(getSingleDataValueFloat(device.dataInfo));
-        }
-        if (device.devType === 'modbus_error_ch') { //TODO: Record all errors for all channels
-          if (getSingleDataValueInt(device.dataInfo)) {
-            status = 1;
-          }
-        }
-        if (device.devType === 'modbus_leak_current') {
-          leakCurrent = Math.abs(getSingleDataValueFloat(device.dataInfo));
+          channelIndex++;
         }
       });
     }
     else {
       status = 2;
-
-      //env temp and env
-      for (let i = 0;i < envTempHumData.length;i++) {
-        const envTempHumValue = [...envTempHumData[i]];
-        envTempHumValue.push(0);
-        if (envTempHumValue.length > 24) {
-          envTempHumValue.shift();
-        }
-        envTempHumData[i] = envTempHumValue;
-      }
-
-      //channel temp
       for (let i = 0;i < tempData.length;i++) {
         const newTempData = [...tempData[i]];
         newTempData.push(0);
@@ -485,8 +274,9 @@ class MainView extends Component {
     const rl = roomData.relayLogs.filter(l => l.relayId === 'modbus_relay_ttyS0_2_3' && l.ended).reverse();
     this.setState({
       currentClassRoomName: roomData.name, leakCurrent: leakCurrent, chTempChartData: tempData,
-      chPowerChartData: powerData, envTempHumChartData: envTempHumData, weatherQuality: getAirQuality(pm25).text,
-      weatherQualityColor: getAirQuality(pm25).color,
+      chPowerChartData: powerData, weatherQuality: getAirQuality(pm25).text,
+      weatherQualityColor: getAirQuality(pm25).color, envTemp: envTemp, envHum: envHum,
+      chNames: updatedChannelNames,
       uvLightLogChartData: rl.map((log, index) => {
         return {
           id: index,
@@ -518,86 +308,75 @@ class MainView extends Component {
     const devices = roomData.devices;
 
     let totalCurrent = 0;
+    let leakCurrent = 0;
+    let status = 0;
+    let pm25 = 0;
+    let envTemp = 0;
+    let envHum = 0;
+    let waterPress = 0;
+    let waterLevel = 0;
     let tempData = this.historyChartsData[roomData._id].chTempChartData;
     let powerData = this.historyChartsData[roomData._id].chPowerChartData;
-    let envTempHumData = this.historyChartsData[roomData._id].envTempHumChartData;
+    let updatedChannelNames = [];
 
-    let status = 0;
     if (roomData.online) {
+      let channelIndex = 0;
       devices.forEach(device => {
-        if (device.devType === 'modbus_temp') {
-          let chTempValue = getSingleDataValueFloat(device.dataInfo);
-          if (chTempValue < -30) { // TODO: Modbus reason
-            chTempValue = 0;
+        if (device.devType === 'pm_sensor') {
+          pm25 = getSingleDataValueFloat(device.dataInfo);
+        }
+        if (device.devType === 'temp_hum_sensor') {
+          const tempHumValues = getMultDataValueFloat(device.dataInfo);
+          for (let dataItem of tempHumValues) {
+            if (dataItem.name === 'TEMP') {
+              envTemp = dataItem.value;
+            }
+            if (dataItem.name === 'HUMI') {
+              envHum = dataItem.value;
+            }
+          }
+        }
+        if (device.devType === 'electric_channel') {
+          const channelDataValues = getMultDataValueString(device.dataInfo);
+          // const channelId = device.devId.substring(7);
+          let chName = '';
+          let chTemp = 0;
+          // let chState = 0;
+
+          for (let i = 0; i < channelDataValues.length; i++) {
+            if (channelDataValues[i].name === 'NAME') {
+              chName = channelDataValues[i].value;
+              updatedChannelNames.push(chName);
+            }
+            if (channelDataValues[i].name === 'TEMP') {
+              chTemp = parseFloat(channelDataValues[i].value);
+            }
+            if (channelDataValues[i].name === 'LEAKCURRENT') {
+              leakCurrent += parseFloat(channelDataValues[i].value);
+            }
+            if (channelDataValues[i].name === 'CURRENT') {
+              totalCurrent += parseFloat(channelDataValues[i].value);
+            }
+            // if (channelDataValues[i].name === 'STATE') {
+            //   chState = (parseInt(channelDataValues[i].value) === 1);
+            // }
           }
 
-          const chTempName = getSingleDataName(device.dataInfo);
-          const pos = chTempName.lastIndexOf('_');
-          const chIndex = getChIndex(chTempName.substring(pos + 1));
-
-          if (chIndex >= 0 && chIndex < tempData.length) {
-            let newTempData = tempData[chIndex];
-            newTempData.push(chTempValue);
+          if (channelIndex <= 3) {
+            const newTempData = [...tempData[channelIndex]]; //Must use object copy instead assignment
+            newTempData.push(chTemp);
             if (newTempData.length > 24) {
               newTempData.shift();
             }
-          }
-        }
-        if (device.devType === 'refrg_temp_hum_sensor' && device.devId === `RTH.${classRooms[index].refrg}`) {
-          let envTemp = 0;
-          let envHum = 0;
-          const arTempHumValPairs = getMultDataValueFloat(device.dataInfo);
-          for (const pair of arTempHumValPairs) {
-            if (pair.name.indexOf('TEMP') > 0 && pair.value !== 0) {
-              envTemp = pair.value;
-            }
-            if (pair.name.indexOf('HUMI') > 0 && pair.value !== 0) {
-              envHum = pair.value;
-            }
+            tempData[channelIndex] = newTempData;
           }
 
-          const envTempData = envTempHumData[0];
-          const envHumData = envTempHumData[1];
-
-          //Ignore 0 value, simply use the latest one
-          if (Math.abs(envTemp) < 0.1) {
-            envTemp = envTempData[23];
-          }
-          if (Math.abs(envHum) < 0.1) {
-            envHum = envHumData[23];
-          }
-
-          envTempData.push(envTemp);
-          if (envTempData.length > 24) {
-            envTempData.shift();
-          }
-          envHumData.push(envHum);
-          if (envHumData.length > 24) {
-            envHumData.shift();
-          }
-        }
-        if (device.devType === 'modbus_current') {
-          totalCurrent += Math.abs(getSingleDataValueFloat(device.dataInfo));
-        }
-        if (device.devType === 'modbus_error_ch') { //TODO: Record all errors for all channels
-          if (getSingleDataValueInt(device.dataInfo)) {
-            status = 1;
-          }
+          channelIndex++;
         }
       });
     }
     else {
       status = 2;
-      //env temp and env
-      for (let i = 0;i < envTempHumData.length;i++) {
-        const envTempHumValue = [...envTempHumData[i]];
-        envTempHumValue.push(0);
-        if (envTempHumValue.length > 24) {
-          envTempHumValue.shift();
-        }
-        envTempHumData[i] = envTempHumValue;
-      }
-
       //channel temp
       for (let i = 0;i < tempData.length;i++) {
         const newTempData = [...tempData[i]];
@@ -645,8 +424,7 @@ class MainView extends Component {
       this.setState({
         currentClassRoomIndex: newIndex,
         chTempChartData: [...this.historyChartsData[classRooms[newIndex].id].chTempChartData],
-        chPowerChartData: [...this.historyChartsData[classRooms[newIndex].id].chPowerChartData],
-        envTempHumChartData: [...this.historyChartsData[classRooms[newIndex].id].envTempHumChartData]
+        chPowerChartData: [...this.historyChartsData[classRooms[newIndex].id].chPowerChartData]
       });
       this.tickRoomCount = 0;
     }
@@ -739,7 +517,10 @@ class MainView extends Component {
       },
       legend: {
         top: '0%',
-        data: ['总线路温度', '空调温度', '插座温度', '总电流'],
+        data: [
+          `${this.state.chNames[0]}温度`, `${this.state.chNames[1]}温度`,
+          `${this.state.chNames[2]}温度`, `${this.state.chNames[3]}温度`,
+          '总电流'],
         textStyle: {
           color: 'rgba(255,255,255,.5)',
           fontSize: '12',
@@ -798,7 +579,7 @@ class MainView extends Component {
       }],
       series: [
         {
-          name: '总线路温度',
+          name: `${this.state.chNames[0]}温度`,
           type: 'line',
           smooth: true,
           symbol: 'circle',
@@ -832,7 +613,7 @@ class MainView extends Component {
           data: this.state.chTempChartData[0]
         },
         {
-          name: '空调温度',
+          name: `${this.state.chNames[1]}温度`,
           type: 'line',
           smooth: true,
           symbol: 'circle',
@@ -866,7 +647,7 @@ class MainView extends Component {
           data: this.state.chTempChartData[1]
         },
         {
-          name: '插座温度',
+          name: `${this.state.chNames[2]}温度`,
           type: 'line',
           smooth: true,
           symbol: 'circle',
@@ -898,6 +679,40 @@ class MainView extends Component {
             }
           },
           data: this.state.chTempChartData[2]
+        },
+        {
+          name: `${this.state.chNames[3]}温度`,
+          type: 'line',
+          smooth: true,
+          symbol: 'circle',
+          symbolSize: 5,
+          showSymbol: false,
+          lineStyle: {
+            normal: {
+              color: '#46bb88',
+              width: 2
+            }
+          },
+          areaStyle: {
+            normal: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                offset: 0,
+                color: 'rgba(2, 126, 210, 0.4)'
+              }, {
+                offset: 0.8,
+                color: 'rgba(2, 221, 185, 0.1)'
+              }], false),
+              shadowColor: 'rgba(0, 0, 0, 0.1)',
+            }
+          },
+          itemStyle: {
+            normal: {
+              color: '#46bb88',
+              borderColor: 'rgba(221, 220, 107, .1)',
+              borderWidth: 12
+            }
+          },
+          data: this.state.chTempChartData[3]
         },
         {
           name: '总电流',
@@ -1305,143 +1120,6 @@ class MainView extends Component {
         }
       ]
     };
-    const envTempHumChartOption = {
-      tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-          lineStyle: {
-            color: '#dddc6b'
-          }
-        }
-      },
-      legend: {
-        top: '0%',
-        data: ['温度', '湿度'],
-        textStyle: {
-          color: 'rgba(255,255,255,.5)',
-          fontSize: '12',
-        }
-      },
-      grid: {
-        left: '10',
-        top: '30',
-        right: '10',
-        bottom: '10',
-        containLabel: true
-      },
-      xAxis: [{
-        type: 'category',
-        boundaryGap: false,
-        axisLabel: {
-          textStyle: {
-            color: "rgba(255,255,255,.6)",
-            fontSize: 12,
-          },
-        },
-        axisLine: {
-          lineStyle: {
-            color: 'rgba(255,255,255,.2)'
-          }
-        },
-        data: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24']
-      },
-      {
-        axisPointer: { show: false },
-        axisLine: { show: false },
-        position: 'bottom',
-        offset: 20,
-      }],
-      yAxis: [{
-        type: 'value',
-        axisTick: { show: false },
-        axisLine: {
-          lineStyle: {
-            color: 'rgba(255,255,255,.1)'
-          }
-        },
-        axisLabel: {
-          textStyle: {
-            color: "rgba(255,255,255,.6)",
-            fontSize: 12,
-          },
-        },
-        splitLine: {
-          lineStyle: {
-            color: 'rgba(255,255,255,.1)'
-          }
-        }
-      }],
-      series: [
-        {
-          name: '温度',
-          type: 'line',
-          smooth: true,
-          symbol: 'circle',
-          symbolSize: 5,
-          showSymbol: false,
-          lineStyle: {
-            normal: {
-              color: '#ef0425',
-              width: 2
-            }
-          },
-          areaStyle: {
-            normal: {
-              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                offset: 0,
-                color: 'rgba(1, 132, 213, 0.4)'
-              }, {
-                offset: 0.8,
-                color: 'rgba(1, 132, 213, 0.1)'
-              }], false),
-              shadowColor: 'rgba(0, 0, 0, 0.1)',
-            }
-          },
-          itemStyle: {
-            normal: {
-              color: '#0184d5',
-              borderColor: 'rgba(221, 220, 107, .1)',
-              borderWidth: 12
-            }
-          },
-          data: this.state.envTempHumChartData[0]
-        },
-        {
-          name: '湿度',
-          type: 'line',
-          smooth: true,
-          symbol: 'circle',
-          symbolSize: 5,
-          showSymbol: false,
-          lineStyle: {
-            normal: {
-              color: '#00d887',
-              width: 2
-            }
-          },
-          areaStyle: {
-            normal: {
-              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                offset: 0,
-                color: 'rgba(0, 216, 135, 0.4)'
-              }, {
-                offset: 0.8,
-                color: 'rgba(0, 216, 135, 0.1)'
-              }], false),
-              shadowColor: 'rgba(0, 0, 0, 0.1)',
-            }
-          },
-          itemStyle: {
-            normal: {
-              color: '#00d887',
-              borderColor: 'rgba(221, 220, 107, .1)',
-              borderWidth: 12
-            }
-          },
-          data: this.state.envTempHumChartData[1]
-        },
-      ]
-    };
 
     return (
       <div className="mainbox">
@@ -1555,14 +1233,14 @@ class MainView extends Component {
                     <img src={temp_icon} height={'40rem'} width={'40rem'} style={{
                       display: 'block', borderRadius: '50%', marginLeft: 'auto', marginRight: 'auto' }} alt='' />
                     <div style={{ textAlign: 'center' }}>
-                      <span style={{ color: 'yellow', fontSize: '13px' }}>{`温度：34℃`}</span>
+                      <span style={{ color: 'yellow', fontSize: '13px' }}>{`温度：${this.state.envTemp.toFixed(1)}℃`}</span>
                     </div>
                   </div>
                   <div style={{ marginLeft: '0.1rem', marginRight: '0.1rem' }}>
                     <img src={humi_icon} height={'40rem'} width={'40rem'} style={{
                       display: 'block', borderRadius: '50%', marginLeft: 'auto', marginRight: 'auto' }} alt='' />
                     <div style={{ textAlign: 'center' }}>
-                      <span style={{ color: 'yellow', fontSize: '13px' }}>{`湿度：54%`}</span>
+                      <span style={{ color: 'yellow', fontSize: '13px' }}>{`湿度：${this.state.envHum.toFixed(1)}%`}</span>
                     </div>
                   </div>
                   <div style={{ marginLeft: '0.18rem', marginRight: '0.1rem' }}>
@@ -1657,17 +1335,6 @@ class MainView extends Component {
             </div>
           </li>
           <li>
-            <div className="boxall" style={{ height: "1.6rem", display: 'none' }}>
-              <div className="alltitle">环境温湿度</div>
-              <ReactECharts
-                option={envTempHumChartOption}
-                notMerge={true}
-                lazyUpdate={true}
-                style={{ height: '100%' }}
-                opts={{ renderer: 'svg' }}
-              />
-              <div className="boxfoot"></div>
-            </div>
             <div className="boxall" style={{ height: "3.1rem" }}>
               <div className="alltitle">消防</div>
               <div style={{
